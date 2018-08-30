@@ -11,7 +11,9 @@ import (
 	"gopkg.in/src-d/lookout-sdk.v0/pb"
 )
 
-//implementes go.AnalyzerService
+//Example Analyser gRPC service implementation.
+//Posts file-level comments for every file with language detected.
+
 type analyzer struct{}
 
 var portToListen = 2020
@@ -73,6 +75,6 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 	pb.RegisterAnalyzerServer(grpcServer, &analyzer{})
-	log.Infof("satart gRPC Analyzer server at port %d", portToListen)
+	log.Infof("starting gRPC Analyzer server at port %d", portToListen)
 	grpcServer.Serve(lis)
 }
