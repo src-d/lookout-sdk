@@ -48,16 +48,8 @@ NotifyPushEvent(context.Context, *pb.PushEvent) (*pb.EventResponse, error)
  - using pre-generated code (TK python import)
  - register and listen
 
+TK
 
-TODOs:
-.proto
-README
- - links to pypi, godoc, travis
-.sh
-.travis.yml
- - make no-changes-in-commit
- - publish on pypi
- -
 
 How to test analyzer
 ====================
@@ -82,8 +74,6 @@ How to test analyzer
 (TK lookout-sdk binary desctiption + options)
 
 
-After
-
 Cavets
 ======
  - client: disable secure connection on dialing with `grpc.WithInsecure()`
@@ -98,5 +88,4 @@ How to update SDK
 
 
  # License
-
 [Apache License v2.0](./LICENSE)
