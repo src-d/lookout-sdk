@@ -20,6 +20,7 @@ type analyzer struct{}
 
 var portToListen = 2020
 var dataSrvAddr = "localhost:10301"
+var version = "alpha"
 
 //TODO(bzz): max msg size
 
@@ -57,7 +58,6 @@ func (*analyzer) NotifyReviewEvent(ctx context.Context, review *pb.ReviewEvent) 
 
 		log.Infof("analyzing '%s' in %s", change.Head.Path, change.Head.Language)
 		//TODO: put your analysis here!
-
 		query := "//*[@roleFunction]"
 		fns, err := tools.Filter(change.Head.UAST, query)
 		if err != nil {
@@ -71,7 +71,7 @@ func (*analyzer) NotifyReviewEvent(ctx context.Context, review *pb.ReviewEvent) 
 		})
 	}
 
-	return &pb.EventResponse{Comments: comments}, nil
+	return &pb.EventResponse{AnalyzerVersion: version, Comments: comments}, nil
 }
 
 func (*analyzer) NotifyPushEvent(context.Context, *pb.PushEvent) (*pb.EventResponse, error) {
