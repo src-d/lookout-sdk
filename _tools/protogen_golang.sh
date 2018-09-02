@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Generates Protobuf + gRCP for Golang
-# Assumes protoc is installed
+# Assumes protoc and protoc-gen-gogofaster binaries are installed
 
 PROTOC="../protoc/bin/protoc"
 
