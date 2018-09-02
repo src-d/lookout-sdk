@@ -19,8 +19,8 @@ jobs:
   include:
     - name: "Python: example integration tests"
       stage: tests
-      env:
-        - PYENV_VERSION="3.6"
+      language: python
+      python: "3.6"
       install:
         - pip3 install -e lookout_sdk
         - ./_tools/install-lookout-latest.sh
@@ -33,8 +33,9 @@ jobs:
 
     - name: "Golang: example integration tests"
       stage: tests
+      language: go
+      go: "1.10"
       install:
-        - eval "$(gimme 1.10)"
         - go version
         - go get .
       script:
@@ -45,17 +46,22 @@ jobs:
 
     - name: "Generated code"
       stage: tests
+      language: go
+      go: "1.10"
       script:
-        - eval "$(gimme 1.10)"
         - make protogen
         - make no-changes-in-commit
 
     - name: "Python: release a library"
       stage: release
-      install:
+      language: python
+      python: "3.6"
+      before_script:
         - pip3 install twine
+        - cd lookout_sdk
       script:
-        - python3 lookout_sdk/setup.py bdist_wheel
+        - pwd
+        - python3 setup.py bdist_wheel
         - twine upload dist/*py3-none-any* -u $PYPI_LOGIN -p $PYPI_PASS
       skip_cleanup: true
 
