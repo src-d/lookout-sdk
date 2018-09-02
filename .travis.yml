@@ -27,26 +27,26 @@ jobs:
       script:
         - python3 --version
         - (python3 language-analyzer.py | tee -a ../py-analyzer.log)&
-        - ../lookout-sdk --log-level=debug --from 0a9d1d159d2b0064c32df8d2287b174a91390b1a --to HEAD ipv4://localhost:2021
+        - ../lookout review --log-level=debug --from 0a9d1d159d2b0064c32df8d2287b174a91390b1a --to HEAD ipv4://localhost:2021
       after_failure:
         - cat ../py-analyzer.log
 
     - name: "Golang: example integration tests"
       stage: tests
-      env:
-        - GIMME_GO_VERSION="1.10"
       install:
+        - eval "$(gimme 1.10)"
         - go version
         - go get .
       script:
         - (go run language-analyzer.go | tee -a ../go-analyzer.log)&
-        - ../lookout-sdk --log-level=debug --from 0a9d1d159d2b0064c32df8d2287b174a91390b1a --to HEAD ipv4://localhost:2021
+        - ../lookout --log-level=debug --from 0a9d1d159d2b0064c32df8d2287b174a91390b1a --to HEAD ipv4://localhost:2021
       after_failure:
         - cat ../go-analyzer.log
 
     - name: "Generated code"
       stage: tests
       script:
+        - eval "$(gimme 1.10)"
         - make protogen
         - make no-changes-in-commit
 

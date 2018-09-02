@@ -16,6 +16,6 @@ check-protoc:
 		./_tools/install-protoc-maybe.sh
 .PHONY: protogen
 protogen: check-protoc
-		$(GOCMD) install github.com/golang/protobuf/protoc-gen-go
+		$(GOCMD) get github.com/gogo/protobuf/protoc-gen-gofast
 		./_tools/protogen_golang.sh
 		./_tools/protogen_python.sh
