@@ -7,6 +7,8 @@ import (
 	"net"
 
 	"google.golang.org/grpc"
+	//"gopkg.in/bblfsh/client-go.v2/tools"
+	"gopkg.in/bblfsh/client-go.v2/tools"
 	"gopkg.in/src-d/go-log.v1"
 	"gopkg.in/src-d/lookout-sdk.v0/pb"
 )
@@ -18,6 +20,8 @@ type analyzer struct{}
 
 var portToListen = 2020
 var dataSrvAddr = "localhost:10301"
+
+//TODO(bzz): max msg size
 
 func (*analyzer) NotifyReviewEvent(ctx context.Context, review *pb.ReviewEvent) (*pb.EventResponse, error) {
 	log.Infof("got review request %v", review)
@@ -53,10 +57,17 @@ func (*analyzer) NotifyReviewEvent(ctx context.Context, review *pb.ReviewEvent) 
 
 		log.Infof("analyzing '%s' in %s", change.Head.Path, change.Head.Language)
 		//TODO: put your analysis here!
+
+		query := "//*[@roleFunction]"
+		fns, err := tools.Filter(change.Head.UAST, query)
+		if err != nil {
+			log.Errorf(err, "quering UAST from %s with %s failed", change.Head.Path, query)
+		}
+
 		comments = append(comments, &pb.Comment{
 			File: change.Head.Path,
 			Line: 0,
-			Text: fmt.Sprintf("language: %s", change.Head.Language),
+			Text: fmt.Sprintf("language: %s, functions: %d", change.Head.Language, len(fns)),
 		})
 	}
 
@@ -68,7 +79,7 @@ func (*analyzer) NotifyPushEvent(context.Context, *pb.PushEvent) (*pb.EventRespo
 }
 
 func main() {
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", portToListen))
+	lis, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%d", portToListen))
 	if err != nil {
 		log.Errorf(err, "failed to listen on port: %d", portToListen)
 	}
