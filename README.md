@@ -23,45 +23,52 @@ SDK includes:
 How to create a new Analyzer
 ============================
 
-Essentially, every analyzer is a [gRCP server](https://grpc.io/docs/guides/#overview) that implements [Analyzer service](TK link). Lookout itself act as a gRCP client and will push your analyzer whenever there is a new PR is ready for anlysis.
+Essentially, every analyzer is a [gRCP server](https://grpc.io/docs/guides/#overview) that implements [Analyzer service](./proto/service_analyzer.proto#L30). Lookout itself act as a gRCP client and will push your analyzer whenever a new PR is ready for anlysis.
 
 ### Golang
  - using pre-generated code `gopkg.in/src-d/lookout-sdk.v0/pb`
  - implement Analyzer service interface. Example:
-```go
-NotifyReviewEvent(ctx context.Context, review *pb.ReviewEvent) (*pb.EventResponse, error)
-NotifyPushEvent(context.Context, *pb.PushEvent) (*pb.EventResponse, error)
-```
-   - analyzer should request [a stream of](https://grpc.io/docs/tutorials/basic/go.html#server-side-streaming-rpc-1) files and UASTs from [DataService](TK link) (that lookout provides, by default on `localhost:10301`)
-   - analyzer have options to ask for UAST, language, full file content or exclude paths: by regexp, or just all [vendored paths](TK link to enry or linguist)
-   - analyzer just need to return a list of [Comment](TK link to .proto definitions) messages
+   ```go
+   NotifyReviewEvent(ctx context.Context, review *pb.ReviewEvent) (*pb.EventResponse, error)
+   NotifyPushEvent(context.Context, *pb.PushEvent) (*pb.EventResponse, error)
+   ```
+   - analyzer should request [a stream of](https://grpc.io/docs/tutorials/basic/go.html#server-side-streaming-rpc-1) files and UASTs from [DataService](./proto/service_data.proto#L27) that lookout exposed, by default, on `localhost:10301`
+   - analyzer have [options](./proto/service_data.proto#L61) to ask either for all files, or just a changed ones, as well as UASTs, language, full file content and/or exclude some paths: by regexp, or just all [vendored paths](https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml)
+   - analyzer have to return a list of [Comment](./proto/service_analyzer.proto#L42) messages
  - run gRPC server to listen for requests from the lookout
 
- SDK contains a quickstart exmaple of Analyzer that detects language for every file `language-analyzer.go`.
-
- (For your conveniece, there is also a bootstrapped application project with SDK, CI, vendoring using godep, etc at [src-d/lookout-example-analyzer-go]())
+ SDK contains a quickstart exmaple of the Analyzer that detects language and number of functions for every file [language-analyzer.go](./language-analyzer.go):
+  - `go get -u .`
+  - `go run language-analyzer.go`
 
 
 ### Python
 
  - `pip install lookout-sdk`
- - using pre-generated code (TK python import)
- - register and listen
+ - using pre-generated code from (TK python import)
+ - implement Analyzer class that extends [AnalyzerServicer](./python/service_analyzer_pb2_grpc.py#34). Example:
+   ```python
+   def NotifyReviewEvent(self, request, context):
+   def NotifyPushEvent(self, request, context):
+   ```
+ - start [grpc server](https://grpc.io/docs/tutorials/basic/python.html#starting-the-server) and add Analyzer instance to it
 
-TK
+SDK conatains a quickstart example of the Analyzer that detects language and number of functions for every file [language-analyzer.py](./language-analyzer.py):
+ - `pip3 install -r analyzer-requirements.txt`
+ - `python3 language-analyzer.py`
 
 
 How to test analyzer
 ====================
- - get `lookout-sdk` binary
- - run `bblfshd`
- - start analyzer e.g.
+ - get `lookout-sdk` binary from [src-d/lookout releases](https://github.com/src-d/lookout/releases)
+ - run [`bblfshd`](https://doc.bblf.sh/using-babelfish/getting-started.html)
+ - build and start analyzer e.g. Golang
    - `go get -u .`
    - `go run language-analyzer.go` ,
-   or
-   - `pip3 install lookout-sdk`
+   or Python
+   - `pip3 install -r analyzer-requirements.txt`
    - `python3 language-analyzer.py`
- - test \wo Github access, on the latest commit in the local Git repository
+ - test **without** Github access, on the latest commit in some Git repository in local FS
 ```
 /lookout review \
   --log-level=debug \
@@ -69,9 +76,10 @@ How to test analyzer
   "ipv4://localhost:2020"
 ```
 
- this will generate a mock Review event and notify the analyzer.
+ this will create a "fake" Review event and notify the analyzer, as if you were creating a PR
+ from `HEAD~1`.
 
-(TK lookout-sdk binary desctiption + options)
+(TK link to `lookout-sdk` binary desctiption + it's options)
 
 
 Cavets
