@@ -7,16 +7,17 @@ from concurrent.futures import ThreadPoolExecutor
 
 import time
 import grpc
-# TODO(bzz): replace \w installed library path
-from python import service_analyzer_pb2_grpc
-from python import service_data_pb2_grpc
-from python import service_data_pb2
+# TODO(bzz): replace \w installed library path (remove python)
+from lookout_sdk import service_analyzer_pb2_grpc
+from lookout_sdk import service_analyzer_pb2
+from lookout_sdk import service_data_pb2_grpc
+from lookout_sdk import service_data_pb2
 
 from bblfsh import filter as filter_uast
 
-
 port_to_listen = 2021
 data_srv_addr = "localhost:10301"
+version = "alpha"
 
 class Analyzer(service_analyzer_pb2_grpc.AnalyzerServicer):
     def NotifyReviewEvent(self, request, context):
@@ -27,14 +28,22 @@ class Analyzer(service_analyzer_pb2_grpc.AnalyzerServicer):
         stub = service_data_pb2_grpc.DataStub(channel)
         changes = stub.GetChanges(
             service_data_pb2.ChangesRequest(
-                head=request.head,
-                base=request.base,
+                head=request.commit_revision.head,
+                base=request.commit_revision.base,
                 want_contents=False,
                 want_uast=True,
                 exclude_vendored=True))
+
+        comments = []
         for change in changes:
-            print("analyzing '{}' in {}", change.head.path, change.head.language)
-        #TODO filter_uast(uast, "")
+            print("analyzing '{}' in {}".format(change.head.path, change.head.language))
+            fns = list(filter_uast(change.head.uast, "//*[@roleFunction]"))
+            comments.append(
+                service_analyzer_pb2.Comment(
+                    file=change.head.path,
+                    line=0,
+                    text="language: {}, functions: {}".format(change.head.language, len(fns))))
+        return service_analyzer_pb2.EventResponse(analyzer_version=version, comments=comments)
 
     def NotifyPushEvent(self, request, context):
         pass
