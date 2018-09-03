@@ -1,8 +1,13 @@
+import io
+import os
 from setuptools import setup, find_packages
 
-description = long_descr = "SDK for writing lookout analyzers"
+VERSION = "0.0.2"
 
-VERSION = "0.0.1"
+description = "SDK for writing lookout analyzers"
+here = os.path.abspath(os.path.dirname(__file__))
+with io.open(os.path.join(here, '../README.md'), encoding='utf-8') as f:
+    long_description = '\n' + f.read()
 
 setup(
         name = "lookout_sdk",
@@ -10,7 +15,8 @@ setup(
         description = description,
         license="Apache 2.0",
         author="source{d}",
-        long_description=long_descr,
+        long_description=long_description,
+        long_description_content_type='text/markdown',
         author_email="applications@sourced.tech",
         url="https://github.com/src-d/lookout-sdk",
         download_url="https://github.com/src-d/lookout-sdk",
