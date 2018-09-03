@@ -64,6 +64,8 @@ SDK conatains a quickstart example of an Analyzer that detects language and numb
 
 How to test analyzer
 ====================
+One can test analyzer locally without the need for Github access and a full lookout server installation using `lookout-sdk` binary. You can think about it as curl-like tool to call an analyzer gRPC endponts. For convenience, it also exposes a DataServer backed by a git repository in local FS.
+
  - get `lookout-sdk` binary from [src-d/lookout releases](https://github.com/src-d/lookout/releases)
  - run [`bblfshd`](https://doc.bblf.sh/using-babelfish/getting-started.html)
  - build and start analyzer e.g. Golang
@@ -80,7 +82,7 @@ How to test analyzer
      "ipv4://localhost:2020"
    ```
 
- this will create a "mock" Review event and notify the analyzer, as if you were creating a PR from `HEAD~1`.
+this will create a "mock" Review event and notify the analyzer, as if you were creating a Pull Request from `HEAD~1`.
 
 Check [src-d/lookout](https://github.com/src-d/lookout/tree/master/sdk#lookout-sdk-commands) for further details on `lookout-sdk` binary CLI options.
 
