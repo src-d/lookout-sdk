@@ -18,14 +18,17 @@ from bblfsh import filter as filter_uast
 port_to_listen = 2021
 data_srv_addr = "localhost:10301"
 version = "alpha"
-#TODO(bzz): max msg size
+grpc_max_msg_size = 100 * 1024 * 1024 #100mb
 
 class Analyzer(service_analyzer_pb2_grpc.AnalyzerServicer):
     def NotifyReviewEvent(self, request, context):
         print("got review request {}".format(request))
 
         # client connection to DataServe
-        channel = grpc.insecure_channel(data_srv_addr)
+        channel = grpc.insecure_channel(data_srv_addr, options=[
+                ("grpc.max_send_message_length", grpc_max_msg_size),
+                ("grpc.max_receive_message_length", grpc_max_msg_size),
+            ])
         stub = service_data_pb2_grpc.DataStub(channel)
         changes = stub.GetChanges(
             service_data_pb2.ChangesRequest(
@@ -54,10 +57,6 @@ def serve():
     service_analyzer_pb2_grpc.add_AnalyzerServicer_to_server(Analyzer(), server)
     server.add_insecure_port("0.0.0.0:{}".format(port_to_listen))
     server.start()
-
-    # TODO(bzz)
-    # - secure context
-    # - max msg size
 
     one_day_sec = 60*60*24
     try:
