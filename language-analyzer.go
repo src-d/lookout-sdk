@@ -20,8 +20,7 @@ type analyzer struct{}
 var portToListen = 2020
 var dataSrvAddr = "localhost:10301"
 var version = "alpha"
-
-//TODO(bzz): max msg size
+var maxMessageSize = 100 * 1024 * 1024 //100mb
 
 func (*analyzer) NotifyReviewEvent(ctx context.Context, review *pb.ReviewEvent) (*pb.EventResponse, error) {
 	log.Infof("got review request %v", review)
@@ -83,7 +82,12 @@ func main() {
 		log.Errorf(err, "failed to listen on port: %d", portToListen)
 	}
 
-	grpcServer := grpc.NewServer()
+	opts := []grpc.ServerOption{
+		grpc.MaxRecvMsgSize(maxMessageSize),
+		grpc.MaxSendMsgSize(maxMessageSize),
+	}
+
+	grpcServer := grpc.NewServer(opts...)
 	pb.RegisterAnalyzerServer(grpcServer, &analyzer{})
 	log.Infof("starting gRPC Analyzer server at port %d", portToListen)
 	grpcServer.Serve(lis)
