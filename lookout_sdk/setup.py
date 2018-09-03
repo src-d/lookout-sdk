@@ -15,7 +15,7 @@ setup(
         download_url="https://github.com/src-d/lookout-sdk",
         packages=find_packages(),
         keywords=["analyzer", "code-reivew"],
-        install_requires=["grpcio>=1.13.0", "protobuf>=3.6.0"],
+        install_requires=["grpcio>=1.13.0", "protobuf>=3.6.0", "bblfsh"],
         package_data={"": ["../LICENSE", "../README.md", "MAINTAINERS"]},
         classifiers=[
             "Development Status :: 3 - Alpha",
