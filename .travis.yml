@@ -1,0 +1,80 @@
+language: generic
+
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-6
+    - g++-6
+
+before_install:
+  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 90
+  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 90
+
+go_import_path: gopkg.in/src-d/lookout-sdk.v0
+
+stages:
+  - name: test
+  - name: release
+    if: tag IS present
+
+jobs:
+  include:
+    - name: "Python: example integration tests"
+      stage: tests
+      language: python
+      python: "3.6"
+      install:
+        - pip3 install -e lookout_sdk
+        - ./_tools/install-lookout-latest.sh
+      script:
+        - python3 --version
+        - (python3 language-analyzer.py |& tee -a ../py-analyzer.log)&
+        - ../lookout review --log-level=debug --from 0a9d1d159d2b0064c32df8d2287b174a91390b1a --to HEAD "ipv4://localhost:2021"
+      after_failure:
+        - cat ../py-analyzer.log
+
+    - name: "Golang: example integration tests"
+      stage: tests
+      language: go
+      go: "1.10"
+      install:
+        - go version
+        - go get .
+        - ./_tools/install-lookout-latest.sh
+      script:
+        - (go run language-analyzer.go |& tee -a ../go-analyzer.log)&
+        - sleep 1s
+        - ../lookout review --log-level=debug --from 0a9d1d159d2b0064c32df8d2287b174a91390b1a --to HEAD "ipv4://localhost:2020"
+      after_failure:
+        - cat ../go-analyzer.log
+
+    - name: "Generated code"
+      stage: tests
+      language: go
+      go: "1.10"
+      env:
+        - PYENV_VERSION="3.6"
+      script:
+        - make protogen
+        - make no-changes-in-commit
+
+    - name: "Python: release a library"
+      stage: release
+      language: python
+      python: "3.6"
+      before_script:
+        - pip3 install twine
+        - cd lookout_sdk
+      script:
+        - pwd
+        - python3 setup.py bdist_wheel
+        - twine upload dist/*py3-none-any* -u $PYPI_LOGIN -p $PYPI_PASS
+      skip_cleanup: true
+
+
+cache:
+  directories:
+    - $HOME/protoc
+    - $HOME/.cache/pip/wheels
