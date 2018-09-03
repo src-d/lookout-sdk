@@ -10,6 +10,7 @@ setup(
         description = description,
         license="Apache 2.0",
         author="source{d}",
+        long_description=long_descr,
         author_email="applications@sourced.tech",
         url="https://github.com/src-d/lookout-sdk",
         download_url="https://github.com/src-d/lookout-sdk",

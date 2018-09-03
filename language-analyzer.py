@@ -7,7 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 import time
 import grpc
-# TODO(bzz): replace \w installed library path (remove python)
+
 from lookout_sdk import service_analyzer_pb2_grpc
 from lookout_sdk import service_analyzer_pb2
 from lookout_sdk import service_data_pb2_grpc
@@ -18,6 +18,7 @@ from bblfsh import filter as filter_uast
 port_to_listen = 2021
 data_srv_addr = "localhost:10301"
 version = "alpha"
+#TODO(bzz): max msg size
 
 class Analyzer(service_analyzer_pb2_grpc.AnalyzerServicer):
     def NotifyReviewEvent(self, request, context):
