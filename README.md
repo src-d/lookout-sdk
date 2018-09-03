@@ -14,16 +14,16 @@ DataService abstracts all data access and details of dealing with actual Git rep
 
 The architecture of lookout and its components are described in [src-d/lookout/docs](https://github.com/src-d/lookout/tree/master/docs#lookout)
 
-SDK includes:
- - proto definitions
- - pre-generated libraries code for Golang and Python
- - quickstart documentation on how to write an analyzer
+**SDK includes:**
+ - proto [definitions](./proto)
+ - pre-generated libraries code for [Golang](./pb) and [Python](./lookout_sdk)
+ - quickstart documentation on [how to write an analyzer](#how-to-create-a-new-analyzer)
 
 
 How to create a new Analyzer
 ============================
 
-Essentially, every analyzer is a [gRCP server](https://grpc.io/docs/guides/#overview) that implements [Analyzer service](./proto/service_analyzer.proto#L30). Lookout itself acts as a gRCP client and will push your analyzer whenever a new  Pull Request is ready for analysis.
+Essentially, every analyzer is just a [gRCP server](https://grpc.io/docs/guides/#overview) that implements [Analyzer service](./proto/service_analyzer.proto#L30). Lookout itself acts as a gRCP client for this server and it will push the analyzer server whenever a new  Pull Request is ready for analysis.
 
 ### Golang
 Steps:
@@ -34,7 +34,7 @@ Steps:
    NotifyPushEvent(context.Context, *pb.PushEvent) (*pb.EventResponse, error)
    ```
    - analyzer should request [a stream of](https://grpc.io/docs/tutorials/basic/go.html#server-side-streaming-rpc-1) files and UASTs from [DataService](./proto/service_data.proto#L27) that lookout exposes, by default, on `localhost:10301`
-   - analyzer has [options](./proto/service_data.proto#L61) to ask either for all files, or just thee changed ones, as well as UASTs, language, full file content and/or exclude some paths: by regexp, or just all [vendored paths](https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml)
+   - analyzer has [options](./proto/service_data.proto#L61) to ask either for all files, or just the changed ones, as well as UASTs, language, full file content and/or exclude some paths: by regexp, or just all [vendored paths](https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml)
    - analyzer has to return a list of [Comment](./proto/service_analyzer.proto#L42) messages
  - run gRPC server to listen for requests from the lookout
 
@@ -52,6 +52,9 @@ Steps:
    def NotifyReviewEvent(self, request, context):
    def NotifyPushEvent(self, request, context):
    ```
+   - analyzer should request [a stream of](https://grpc.io/docs/tutorials/basic/python.html#response-streaming-rpc) files and UASTs from [DataService](./proto/service_data.proto#L27) that lookout exposes, by default, on `localhost:10301`
+   - analyzer has [options](./proto/service_data.proto#L61) to ask either for all files, or just the changed ones, as well as UASTs, language, full file content and/or exclude some paths: by regexp, or just all [vendored paths](https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml)
+   - analyzer has to return a list of [Comment](./proto/service_analyzer.proto#L42) messages
  - start [grpc server](https://grpc.io/docs/tutorials/basic/python.html#starting-the-server) and add Analyzer instance to it
 
 SDK conatains a quickstart example of an Analyzer that detects language and number of functions for every file [language-analyzer.py](./language-analyzer.py):
