@@ -1,4 +1,4 @@
-lookout SDK [![GoDoc](https://godoc.org/gopkg.in/src-d/lookout-sdk.v0?status.svg)](https://godoc.org/github.com/src-d/lookout-sdk) [![PyPI version](https://badge.fury.io/py/lookout-sdk.svg)](https://pypi.org/project/lookout-sdk/) [![Build Status](https://travis-ci.org/src-d/src-d/lookout-sdk.svg)](https://travis-ci.org/src-d/src-d/lookout-sdk)
+lookout SDK [![GoDoc](https://godoc.org/gopkg.in/src-d/lookout-sdk.v0?status.svg)](https://godoc.org/github.com/src-d/lookout-sdk) [![PyPI version](https://badge.fury.io/py/lookout-sdk.svg)](https://pypi.org/project/lookout-sdk/) [![Build Status](https://travis-ci.org/src-d/lookout-sdk.svg)](https://travis-ci.org/src-d/lookout-sdk)
 -----------
 
 What is lookout SDK?
@@ -46,7 +46,7 @@ Steps:
 ### Python
 
  - `pip install lookout-sdk`
- - using pre-generated code from (TK python import)
+ - use pre-generated code for gRPC from [`lookout_sdk`](https://pypi.org/project/lookout-sdk/) library
  - implement Analyzer class that extends [AnalyzerServicer](./python/service_analyzer_pb2_grpc.py#34). Example:
    ```python
    def NotifyReviewEvent(self, request, context):
@@ -70,29 +70,29 @@ How to test analyzer
    - `pip3 install -r analyzer-requirements.txt`
    - `python3 language-analyzer.py`
  - test **without** Github access, on the latest commit in some Git repository in local FS
-```
-/lookout review \
-  --log-level=debug \
-  --git-dir="$GOPATH/src/gopkg.in/src-d/lookout-sdk.v0" \
-  "ipv4://localhost:2020"
-```
+   ```
+   $ lookout-sdk review \
+     --log-level=debug \
+     --git-dir="$GOPATH/src/gopkg.in/src-d/lookout-sdk.v0" \
+     "ipv4://localhost:2020"
+   ```
 
- this will create a "mock" Review event and notify the analyzer, as if you were creating a PR
- from `HEAD~1`.
+ this will create a "mock" Review event and notify the analyzer, as if you were creating a PR from `HEAD~1`.
 
-(TK link to `lookout-sdk` binary desctiption + it's options)
+Check [src-d/lookout](https://github.com/src-d/lookout/tree/master/sdk#lookout-sdk-commands) for further details on `lookout-sdk` binary CLI options.
 
 
 Caveats
 ========
  - client: disable secure connection on dialing with `grpc.WithInsecure()`
- - client: turn off gRCP [fail-fast](TK link)
- - client/server: set max gRCP message size
+ - client/server: set [max gRCP message size](https://github.com/grpc/grpc/issues/7927)
+ - client: turn off [gRCP fail-fast](https://github.com/grpc/grpc/blob/master/doc/wait-for-ready.md) mode
+   If your analyzer greedy creates a connection to DataServer before one was actually started, you migh want to disable fail-fast mode. This way the RPCs are queued untill the chanel ready. Here is an [example](https://github.com/src-d/lookout-gometalint-analyzer/blob/7b4b37fb3109299516fbb43017934d131784f49f/cmd/gometalint-analyzer/main.go#L66).
 
 
 How to update SDK
 =================
- - re-generate all the code using (TK link to .sh), commit
+ - re-generate all the code using `make protogen`, commit
  - tag a realease
 
 
