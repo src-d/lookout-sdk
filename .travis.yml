@@ -66,9 +66,7 @@ jobs:
       python: "3.6"
       before_script:
         - pip3 install twine
-        - cd lookout_sdk
       script:
-        - pwd
         - python3 setup.py bdist_wheel
         - twine upload dist/*py3-none-any* -u $PYPI_LOGIN -p $PYPI_PASS
       skip_cleanup: true
