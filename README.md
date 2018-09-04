@@ -98,7 +98,7 @@ Caveats
 How to update SDK
 =================
  - re-generate all the code using `make protogen`, commit
- - tag a realease
+ - tag a release
 
 
  # License
