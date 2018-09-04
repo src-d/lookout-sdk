@@ -25,6 +25,7 @@ jobs:
       stage: test
       language: python
       python: "3.6"
+      if: branch = fix-python-packaging
       install:
         - pip3 install -e .
         - ./_tools/install-lookout-latest.sh
