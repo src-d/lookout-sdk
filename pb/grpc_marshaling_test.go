@@ -32,12 +32,13 @@ type FileFixture struct {
 	File *File
 }
 
-var ValidGitModes = []uint32{
+var validGitModes = []uint32{
 	100644,
 	100755,
 	120000,
 }
 
+// Generate implements quick.Generator interface
 func (f *FileFixture) Generate(rand *rand.Rand, size int) reflect.Value {
 	ff := &FileFixture{}
 	ff.File = randomFile(rand, size)
@@ -57,7 +58,7 @@ func randomFile(rand *rand.Rand, size int) *File {
 
 func randomValidGitMode(rand *rand.Rand) uint32 {
 	n := rand.Intn(3)
-	return ValidGitModes[n]
+	return validGitModes[n]
 }
 
 func randomValidPath(rand *rand.Rand) string {
