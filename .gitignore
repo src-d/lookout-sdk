@@ -7,5 +7,5 @@ __pycache__
 
 .ci
 
-build
-dist
+python/build
+python/dist
