@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Generates Protobuf + gRCP for Golang
-# Assumes protoc and protoc-gen-gogofaster binaries are installed
+# Assumes 'protoc' and 'protoc-gen-gogofaster' binaries are installed
 
 PROTOC="../protoc/bin/protoc"
 
@@ -13,5 +13,5 @@ Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types,\
 Mgoogle/protobuf/duration.proto=github.com/gogo/protobuf/types,\
 Mgoogle/protobuf/timestamp.proto=github.com/gogo/protobuf/types,\
 Mgoogle/protobuf/struct.proto=github.com/gogo/protobuf/types,\
-Mgoogle/protobuf/wrappers.proto=github.com/gogo/protobuf/types:pb \
-proto/*.proto
+Mgoogle/protobuf/wrappers.proto=github.com/gogo/protobuf/types:golang \
+proto/lookout/sdk/*.proto
