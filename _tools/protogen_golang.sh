@@ -34,7 +34,7 @@ if ! mv "${dst}/${sdk}/"*.go pb ; then
     exit 2
 fi
 
-if ! rm -rf "${dst}/${sdk}/" ; then
-    echo "Failed to delete ${dst}/${sdk}"
+if ! rm -rf "${dst}" ; then
+    echo "Failed to delete ${dst}"
     exit 2
 fi
