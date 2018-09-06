@@ -2,11 +2,12 @@ import io
 import os
 from setuptools import setup, find_packages
 
-VERSION = "0.0.3"
+VERSION = "0.0.4"
+README = '../README.md'
 
 description = "SDK for writing lookout analyzers"
 here = os.path.abspath(os.path.dirname(__file__))
-with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
+with io.open(os.path.join(here, README), encoding='utf-8') as f:
     long_description = '\n' + f.read()
 
 setup(
@@ -23,7 +24,7 @@ setup(
         packages=find_packages(),
         keywords=["analyzer", "code-reivew"],
         install_requires=["grpcio>=1.13.0", "protobuf>=3.6.0", "bblfsh"],
-        package_data={"": ["LICENSE", "README.md", "MAINTAINERS"]},
+        package_data={"": ["../LICENSE", "../MAINTAINERS", README]},
         classifiers=[
             "Development Status :: 3 - Alpha",
             "Environment :: Console",

@@ -19,7 +19,7 @@ package pb;
 
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 import "gopkg.in/bblfsh/sdk.v1/uast/generated.proto";
-import "event.proto";
+import "lookout/sdk/event.proto";
 
 option (gogoproto.goproto_getters_all) = false;
 
