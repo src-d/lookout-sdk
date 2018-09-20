@@ -58,7 +58,6 @@ Steps:
  - start [grpc server](https://grpc.io/docs/tutorials/basic/python.html#starting-the-server) and add Analyzer instance to it
 
 SDK conatains a quickstart example of an Analyzer that detects language and number of functions for every file [language-analyzer.py](./language-analyzer.py):
- - `pip3 install -r analyzer-requirements.txt`
  - `python3 language-analyzer.py`
 
 
@@ -72,7 +71,7 @@ One can test analyzer locally without the need for Github access and a full look
    - `go get -u .`
    - `go run language-analyzer.go` ,
    or Python
-   - `pip3 install -r analyzer-requirements.txt`
+   - `pip install lookout-sdk`
    - `python3 language-analyzer.py`
  - test **without** Github access, on the latest commit in some Git repository in local FS
    ```
