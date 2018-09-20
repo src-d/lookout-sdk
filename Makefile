@@ -18,5 +18,5 @@ check-protoc:
 protogen: check-protoc
 		$(GOCMD) get github.com/gogo/protobuf/protoc-gen-gogofaster
 		./_tools/protogen_golang.sh
-		pip3 install grpcio_tools
+		pip3 install grpcio_tools==1.13.0
 		./_tools/protogen_python.sh
