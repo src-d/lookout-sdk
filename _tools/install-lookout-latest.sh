@@ -16,7 +16,7 @@ curl -v ${GITHUB_TOKEN:+'-H' "Authorization: token $GITHUB_TOKEN"} \
     --retry-delay 0 \
     --retry-max-time 40\
     "https://api.github.com/repos/src-d/lookout/releases/latest" \
-  | tee -a ../lookout-install.log \
+  | tee -a ./lookout-install.log \
   | grep -oP '"browser_download_url": "\K(.*)(?=")' \
   | grep "${OS}" \
   | wget -qi -
@@ -38,10 +38,7 @@ if ! tar -xvzf lookout-sdk_*.tar.gz ; then
   exit 2
 fi
 
-# using lookout_sdk binary name, to workaround current dir name
-# also beeing lookout-sdk on Travis, that is not customizable
-# https://github.com/travis-ci/travis-ci/issues/9993
-if ! mv lookout-sdk_*/lookout-sdk ../lookout_sdk ; then
+if ! mv lookout-sdk_*/lookout-sdk ./lookout-sdk ; then
   echo "Unable to move lookout-sdk binary file" >&2
   exit 2
 fi

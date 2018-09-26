@@ -3,13 +3,13 @@
 # Generates Protobuf + gRCP for Golang
 # Assumes 'protoc' and 'protoc-gen-gogofaster' binaries are installed
 
-PROTOC="../protoc/bin/protoc"
+PROTOC="./protoc/bin/protoc"
 sdk="lookout/sdk"
 src="proto"
 dst="golang"
 
 
-[[ -f "../protoc/bin/protoc" ]] >/dev/null 2>&1 || { echo "Protobuf compiler is required but not found in ${PROTOC}" >&2; exit 1; }
+[[ -f $PROTOC ]] >/dev/null 2>&1 || { echo "Protobuf compiler is required but not found in ${PROTOC}" >&2; exit 1; }
 
 if ! mkdir -p "${dst}" ; then
     echo "Failed to create ${dst}"
