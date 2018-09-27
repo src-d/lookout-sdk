@@ -93,12 +93,11 @@ Caveats
  - client: turn off [gRCP fail-fast](https://github.com/grpc/grpc/blob/master/doc/wait-for-ready.md) mode
    If your analyzer greedy creates a connection to DataServer before one was actually started, you migh want to disable fail-fast mode. This way the RPCs are queued untill the chanel ready. Here is an [example](https://github.com/src-d/lookout-gometalint-analyzer/blob/7b4b37fb3109299516fbb43017934d131784f49f/cmd/gometalint-analyzer/main.go#L66).
 
-
-How to update SDK
+Release Process
 =================
- - re-generate all the code using `make protogen`, commit
- - tag a release
-
+ - Make sure the code is up to date using `make protogen`.
+ - Update `VERSION` in `python/setup.py` with the same version that you will use for the tag (manual step required until [#2](https://github.com/src-d/lookout-sdk/issues/2) is implemented).
+ - Create the release tag.
 
  # License
 [Apache License v2.0](./LICENSE)
