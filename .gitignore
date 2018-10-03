@@ -11,3 +11,7 @@ python/build
 python/dist
 
 protoc
+
+py-analyzer.log
+go-analyzer.log
+lookout-install.log
