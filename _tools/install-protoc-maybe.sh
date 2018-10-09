@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Checks Protobuff compiler version. 
+# Checks Protobuf compiler version.
 # If absent, installs one in protoc_dir from GH release.
 
 PROTOC_VER="3.6.0"
@@ -11,7 +11,7 @@ else
 	protoc_os="linux"
 fi
 
-protoc_dir="../protoc"
+protoc_dir="./protoc"
 
 cur_ver="$("$protoc_dir/bin/protoc" --version | grep -o '[^ ]*$')"
 if [[ "$cur_ver" == "$PROTOC_VER" ]]; then

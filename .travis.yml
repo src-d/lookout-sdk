@@ -29,12 +29,12 @@ jobs:
         - pip3 install -e python
       script:
         - ./_tools/install-lookout-latest.sh
-        - (python3 language-analyzer.py |& tee -a ../py-analyzer.log)&
-        - ../lookout_sdk review --log-level=debug --from 0a9d1d159d2b0064c32df8d2287b174a91390b1a --to HEAD "ipv4://localhost:2021"
+        - (python3 language-analyzer.py |& tee -a ./py-analyzer.log)&
+        - ./lookout-sdk review --log-level=debug --from 0a9d1d159d2b0064c32df8d2287b174a91390b1a --to HEAD "ipv4://localhost:2021"
       after_failure:
         - echo "test"
-        - cat ../py-analyzer.log
-        - cat ../lookout-install.log
+        - cat ./py-analyzer.log
+        - cat ./lookout-install.log
 
     - name: "Golang: example integration tests"
       stage: test
@@ -45,12 +45,12 @@ jobs:
         - go get .
       script:
         - ./_tools/install-lookout-latest.sh
-        - (go run language-analyzer.go |& tee -a ../go-analyzer.log)&
+        - (go run language-analyzer.go |& tee -a ./go-analyzer.log)&
         - sleep 1s
-        - ../lookout_sdk review --log-level=debug --from 0a9d1d159d2b0064c32df8d2287b174a91390b1a --to HEAD "ipv4://localhost:2020"
+        - ./lookout-sdk review --log-level=debug --from 0a9d1d159d2b0064c32df8d2287b174a91390b1a --to HEAD "ipv4://localhost:2020"
       after_failure:
-        - cat ../go-analyzer.log
-        - cat ../lookout-install.log
+        - cat ./go-analyzer.log
+        - cat ./lookout-install.log
 
     - name: "Generated code"
       stage: test
@@ -77,5 +77,5 @@ jobs:
 
 cache:
   directories:
-    - $HOME/protoc
+    - protoc
     - $HOME/.cache/pip/wheels
