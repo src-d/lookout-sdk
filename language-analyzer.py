@@ -18,7 +18,8 @@ from bblfsh import filter as filter_uast
 port_to_listen = 2021
 data_srv_addr = "localhost:10301"
 version = "alpha"
-grpc_max_msg_size = 100 * 1024 * 1024 #100mb
+grpc_max_msg_size = 100 * 1024 * 1024  # 100mb
+
 
 class Analyzer(service_analyzer_pb2_grpc.AnalyzerServicer):
     def NotifyReviewEvent(self, request, context):
@@ -52,6 +53,7 @@ class Analyzer(service_analyzer_pb2_grpc.AnalyzerServicer):
     def NotifyPushEvent(self, request, context):
         pass
 
+
 def serve():
     server = grpc.server(thread_pool=ThreadPoolExecutor(max_workers=10))
     service_analyzer_pb2_grpc.add_AnalyzerServicer_to_server(Analyzer(), server)
@@ -65,9 +67,11 @@ def serve():
     except KeyboardInterrupt:
         server.stop(0)
 
+
 def main():
     print("starting gRPC Analyzer server at port {}".format(port_to_listen))
     serve()
+
 
 if __name__ == "__main__":
     main()
