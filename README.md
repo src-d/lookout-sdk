@@ -57,7 +57,7 @@ Steps:
    - analyzer has to return a list of [Comment](./proto/lookout/sdk/service_analyzer.proto#L42) messages
  - start [grpc server](https://grpc.io/docs/tutorials/basic/python.html#starting-the-server) and add Analyzer instance to it
 
-SDK conatains a quickstart example of an Analyzer that detects language and number of functions for every file [language-analyzer.py](./language-analyzer.py):
+SDK contains a quickstart example of an Analyzer that detects language and number of functions for every file [language-analyzer.py](./language-analyzer.py):
  - `python3 language-analyzer.py`
 
 
@@ -91,7 +91,7 @@ Caveats
  - client: disable secure connection on dialing with `grpc.WithInsecure()`
  - client/server: set [max gRCP message size](https://github.com/grpc/grpc/issues/7927)
  - client: turn off [gRCP fail-fast](https://github.com/grpc/grpc/blob/master/doc/wait-for-ready.md) mode
-   If your analyzer greedy creates a connection to DataServer before one was actually started, you migh want to disable fail-fast mode. This way the RPCs are queued untill the chanel ready. Here is an [example](https://github.com/src-d/lookout-gometalint-analyzer/blob/7b4b37fb3109299516fbb43017934d131784f49f/cmd/gometalint-analyzer/main.go#L66).
+   If your analyzer greedy creates a connection to DataServer before one was actually started, you might want to disable fail-fast mode. This way the RPCs are queued until the chanel ready. Here is an [example](https://github.com/src-d/lookout-gometalint-analyzer/blob/7b4b37fb3109299516fbb43017934d131784f49f/cmd/gometalint-analyzer/main.go#L66).
 
 Release Process
 =================
