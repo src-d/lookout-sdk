@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"net/url"
 	"reflect"
 	"strings"
 
@@ -91,9 +92,21 @@ func (e *PushEvent) Validate() error {
 
 type RepositoryInfo = vcsurl.RepoInfo //TODO(mcuadros): improve repository references
 
-// Repository returns the RepositoryInfo
+// Repository returns the RepositoryInfo, or nil if there was any error parsing
+// InternalRepositoryURL.
 func (e *ReferencePointer) Repository() *RepositoryInfo {
-	info, _ := vcsurl.Parse(e.InternalRepositoryURL)
+	info, err := vcsurl.Parse(e.InternalRepositoryURL)
+	if err != nil {
+		return nil
+	}
+
+	// GitHub authentication requires the remote to be https:// instead of git://
+	if info.RepoHost == vcsurl.GitHub {
+		cloneURL, _ := url.Parse(info.CloneURL)
+		cloneURL.Scheme = "https"
+		info.CloneURL = cloneURL.String()
+	}
+
 	return info
 }
 
