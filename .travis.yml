@@ -24,6 +24,15 @@ stages:
 
 jobs:
   include:
+    - name: "Linters"
+      stage: test
+      language: python
+      python: "3.6"
+      install:
+        - pip3 install --upgrade pycodestyle
+      script:
+        - pycodestyle --max-line-length=99 --exclude='./python/lookout/sdk' .
+
     - name: "Python: example integration tests"
       stage: test
       language: python

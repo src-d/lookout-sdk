@@ -11,9 +11,9 @@ with io.open(os.path.join(here, README), encoding='utf-8') as f:
     long_description = '\n' + f.read()
 
 setup(
-        name = "lookout_sdk",
-        version = VERSION,
-        description = description,
+        name="lookout_sdk",
+        version=VERSION,
+        description=description,
         license="Apache 2.0",
         author="source{d}",
         long_description=long_description,
