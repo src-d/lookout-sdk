@@ -23,7 +23,7 @@ The architecture of lookout and its components are described in [src-d/lookout/d
 How to create a new Analyzer
 ============================
 
-Essentially, every analyzer is just a [gRCP server](https://grpc.io/docs/guides/#overview) that implements [Analyzer service](./proto/lookout/sdk/service_analyzer.proto#L30). Lookout itself acts as a gRCP client for this server and it will push the analyzer server whenever a new  Pull Request is ready for analysis.
+Essentially, every analyzer is just a [gRPC server](https://grpc.io/docs/guides/#overview) that implements [Analyzer service](./proto/lookout/sdk/service_analyzer.proto#L30). Lookout itself acts as a gRPC client for this server and it will push the analyzer server whenever a new  Pull Request is ready for analysis.
 
 ### Golang
 Steps:
@@ -89,8 +89,8 @@ Check [src-d/lookout](https://github.com/src-d/lookout/tree/master/sdk#lookout-s
 Caveats
 ========
  - client: disable secure connection on dialing with `grpc.WithInsecure()`
- - client/server: set [max gRCP message size](https://github.com/grpc/grpc/issues/7927)
- - client: turn off [gRCP fail-fast](https://github.com/grpc/grpc/blob/master/doc/wait-for-ready.md) mode
+ - client/server: set [max gRPC message size](https://github.com/grpc/grpc/issues/7927)
+ - client: turn off [gRPC fail-fast](https://github.com/grpc/grpc/blob/master/doc/wait-for-ready.md) mode
    If your analyzer greedy creates a connection to DataServer before one was actually started, you might want to disable fail-fast mode. This way the RPCs are queued until the chanel ready. Here is an [example](https://github.com/src-d/lookout-gometalint-analyzer/blob/7b4b37fb3109299516fbb43017934d131784f49f/cmd/gometalint-analyzer/main.go#L66).
 
 Release Process
