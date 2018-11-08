@@ -16,7 +16,7 @@ func TestParseRepositoryInfo(t *testing.T) {
 		{
 			Input: "github.com/foo/bar",
 			Expected: RepositoryInfo{
-				CloneURL: "https://github.com/foo/bar",
+				CloneURL: "https://github.com/foo/bar.git",
 				Host:     "github.com",
 				FullName: "foo/bar",
 				Owner:    "foo",
@@ -26,7 +26,7 @@ func TestParseRepositoryInfo(t *testing.T) {
 		{
 			Input: "https://github.com/foo/bar",
 			Expected: RepositoryInfo{
-				CloneURL: "https://github.com/foo/bar",
+				CloneURL: "https://github.com/foo/bar.git",
 				Host:     "github.com",
 				FullName: "foo/bar",
 				Owner:    "foo",
@@ -36,7 +36,17 @@ func TestParseRepositoryInfo(t *testing.T) {
 		{
 			Input: "https://token@github.com/foo/bar",
 			Expected: RepositoryInfo{
-				CloneURL: "https://token@github.com/foo/bar",
+				CloneURL: "https://token@github.com/foo/bar.git",
+				Host:     "github.com",
+				FullName: "foo/bar",
+				Owner:    "foo",
+				Name:     "bar",
+			},
+		},
+		{
+			Input: "https://token@github.com/foo/bar.git",
+			Expected: RepositoryInfo{
+				CloneURL: "https://token@github.com/foo/bar.git",
 				Host:     "github.com",
 				FullName: "foo/bar",
 				Owner:    "foo",
@@ -46,7 +56,7 @@ func TestParseRepositoryInfo(t *testing.T) {
 		{
 			Input: "gitlab.com/foo/bar",
 			Expected: RepositoryInfo{
-				CloneURL: "https://gitlab.com/foo/bar",
+				CloneURL: "https://gitlab.com/foo/bar.git",
 				Host:     "gitlab.com",
 				FullName: "foo/bar",
 				Owner:    "foo",
@@ -56,7 +66,7 @@ func TestParseRepositoryInfo(t *testing.T) {
 		{
 			Input: "bitbucket.org/foo/bar",
 			Expected: RepositoryInfo{
-				CloneURL: "https://bitbucket.org/foo/bar",
+				CloneURL: "https://bitbucket.org/foo/bar.git",
 				Host:     "bitbucket.org",
 				FullName: "foo/bar",
 				Owner:    "foo",

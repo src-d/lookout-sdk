@@ -93,7 +93,7 @@ func (e *PushEvent) Validate() error {
 	return nil
 }
 
-// RepositoryInfo containes information about a repository
+// RepositoryInfo contains information about a repository
 type RepositoryInfo struct {
 	CloneURL string
 	Host     string
@@ -132,10 +132,14 @@ func ParseRepositoryInfo(input string) (*RepositoryInfo, error) {
 		return nil, fmt.Errorf("host %s is not supported", u.Host)
 	}
 
-	fullName := strings.Trim(u.Path, "/")
+	fullName := strings.TrimSuffix(strings.Trim(u.Path, "/"), ".git")
 	parts := strings.Split(fullName, "/")
 	if len(parts) != 2 {
 		return nil, fmt.Errorf("unsupported path %s", fullName)
+	}
+
+	if !strings.HasSuffix(u.Path, ".git") {
+		u.Path = u.Path + ".git"
 	}
 
 	return &RepositoryInfo{
