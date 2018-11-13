@@ -120,6 +120,13 @@ func ParseRepositoryInfo(input string) (*RepositoryInfo, error) {
 		return ParseRepositoryInfo("https://" + input)
 	}
 
+	if u.Scheme == "file" {
+		return &RepositoryInfo{
+			CloneURL: input,
+			FullName: u.Path,
+		}, nil
+	}
+
 	if u.Scheme != "https" {
 		return nil, fmt.Errorf("only https urls are supported")
 	}

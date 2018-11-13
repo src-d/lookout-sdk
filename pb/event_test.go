@@ -73,6 +73,13 @@ func TestParseRepositoryInfo(t *testing.T) {
 				Name:     "bar",
 			},
 		},
+		{
+			Input: "file:///some/path/to/repo",
+			Expected: RepositoryInfo{
+				CloneURL: "file:///some/path/to/repo",
+				FullName: "/some/path/to/repo",
+			},
+		},
 	}
 
 	errorCases := []struct {
