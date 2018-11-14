@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"path/filepath"
 	"reflect"
 	"strings"
 )
@@ -124,6 +125,7 @@ func ParseRepositoryInfo(input string) (*RepositoryInfo, error) {
 		return &RepositoryInfo{
 			CloneURL: input,
 			FullName: u.Path,
+			Name:     filepath.Base(u.Path),
 		}, nil
 	}
 

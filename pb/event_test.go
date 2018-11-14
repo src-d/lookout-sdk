@@ -78,6 +78,7 @@ func TestParseRepositoryInfo(t *testing.T) {
 			Expected: RepositoryInfo{
 				CloneURL: "file:///some/path/to/repo",
 				FullName: "/some/path/to/repo",
+				Name:     "repo",
 			},
 		},
 	}
