@@ -2,7 +2,7 @@ import io
 import os
 from setuptools import setup, find_packages
 
-VERSION = "0.1.1"
+VERSION = "0.1.2"
 README = '../README.md'
 
 description = "SDK for writing lookout analyzers"
