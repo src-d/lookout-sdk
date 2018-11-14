@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"path/filepath"
 	"reflect"
 	"strings"
 )
@@ -118,6 +119,14 @@ func ParseRepositoryInfo(input string) (*RepositoryInfo, error) {
 
 	if u.Scheme == "" {
 		return ParseRepositoryInfo("https://" + input)
+	}
+
+	if u.Scheme == "file" {
+		return &RepositoryInfo{
+			CloneURL: input,
+			FullName: u.Path,
+			Name:     filepath.Base(u.Path),
+		}, nil
 	}
 
 	if u.Scheme != "https" {
