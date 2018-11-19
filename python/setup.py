@@ -24,7 +24,7 @@ setup(
         packages=find_packages(),
         keywords=["analyzer", "code-reivew"],
         install_requires=["grpcio==1.13.0", "protobuf>=3.5.0,<4.0", "bblfsh>=2.12.0,<3.0"],
-        package_data={"": ["../LICENSE", "../MAINTAINERS", README]},
+        package_data={"": ["../LICENSE.md", "../MAINTAINERS", README]},
         classifiers=[
             "Development Status :: 3 - Alpha",
             "Environment :: Console",
