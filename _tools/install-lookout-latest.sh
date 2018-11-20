@@ -1,37 +1,26 @@
 #!/bin/bash
 #
 # Installs latest lookout SDK binary
-# Depends on GNU grep
-set -x
-
-#TODO(bzz): check for local cached version first
 
 OS="$(uname | tr '[:upper:]' '[:lower:]')"
+LATEST_TAG="$(git ls-remote -t --refs https://github.com/src-d/lookout \
+  | sed -E 's/^.+refs\/tags\/(.+)/\1/g' \
+  | grep -e '^v[0-9]\+\.[0-9]\+\.[0-9]\+$' \
+  | sort \
+  | tail -n 1)"
 
-oIFS=$IFS IFS=' '
-curl -v ${GITHUB_TOKEN:+'-H' "Authorization: token $GITHUB_TOKEN"} \
-    --connect-timeout 5 \
-    --max-time 10 \
-    --retry 5 \
-    --retry-delay 0 \
-    --retry-max-time 40\
-    "https://api.github.com/repos/src-d/lookout/releases/latest" \
-  | tee -a ./lookout-install.log \
-  | grep -oP '"browser_download_url": "\K(.*)(?=")' \
-  | grep "${OS}" \
-  | wget -qi -
-
-if [[ "${PIPESTATUS[0]}" -ne 0 || \
-      "${PIPESTATUS[1]}" -ne 0 || \
-      "${PIPESTATUS[2]}" -ne 0 || \
-      "${PIPESTATUS[3]}" -ne 0 || \
-      "${PIPESTATUS[4]}" -ne 0 ]];
-then
-  echo "Unable download latest lookout SDK release" >&2
+# validate that tag is correct
+if [ -z "$LATEST_TAG" ]; then
+  echo "can not get the latest tag" >&2
   exit 2
 fi
-IFS=$oIFS; unset -v oIFS
-# http://mywiki.wooledge.org/BashFAQ/050#I_only_want_to_pass_options_if_the_runtime_data_needs_them
+
+BINARY_URL="https://github.com/src-d/lookout/releases/download/${LATEST_TAG}/lookout-sdk_${LATEST_TAG}_${OS}_amd64.tar.gz"
+
+if ! wget $BINARY_URL ; then
+  echo "Unable to download lookout release archive" >&2
+  exit 2
+fi
 
 if ! tar -xvzf lookout-sdk_*.tar.gz ; then
   echo "Unable to extract lookout release archive" >&2
