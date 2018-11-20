@@ -86,6 +86,14 @@ this will create a "mock" Review event and notify the analyzer, as if you were c
 Check [src-d/lookout](https://github.com/src-d/lookout/tree/master/sdk#lookout-sdk-commands) for further details on `lookout-sdk` binary CLI options.
 
 
+Extracting UAST from arbitrary code
+===================================
+
+Lookout server and `lookout-sdk` binary proxy bblfsh gRPC protocol through DataServer.
+
+Please check how to create client in [bblfsh documentation](https://docs.sourced.tech/babelfish) and use DataServer address to connect.
+
+
 Caveats
 ========
  - client: disable secure connection on dialing with `grpc.WithInsecure()`
