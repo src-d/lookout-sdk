@@ -33,12 +33,10 @@ jobs:
         - pip3 install -e python
       script:
         - ./_tools/install-lookout-latest.sh
-        - (python3 language-analyzer.py |& tee -a ./py-analyzer.log)&
+        - (python3 -u language-analyzer.py |& tee -a ./py-analyzer.log)&
         - sleep 5s
         - ./lookout-sdk review --log-level=debug --from 0a9d1d159d2b0064c32df8d2287b174a91390b1a --to HEAD "ipv4://localhost:2021"
         - grep -v "error" ./py-analyzer.log > /dev/null
-      after_failure:
-        - cat ./py-analyzer.log
 
     - name: 'Golang: example integration tests'
       stage: test
@@ -54,8 +52,6 @@ jobs:
         - sleep 5s
         - ./lookout-sdk review --log-level=debug --from 0a9d1d159d2b0064c32df8d2287b174a91390b1a --to HEAD "ipv4://localhost:2020"
         - grep -v "error" ./go-analyzer.log > /dev/null
-      after_failure:
-        - cat ./go-analyzer.log
 
     - name: 'Golang test'
       stage: test
