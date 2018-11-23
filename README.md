@@ -17,6 +17,7 @@ The architecture of lookout and its components are described in [src-d/lookout/d
 **SDK includes:**
  - proto [definitions](./proto)
  - pre-generated libraries code for [Golang](./pb) and [Python](./python)
+ - low-level helpers to workaround protobuf/gRPC caveats. Check [go documentation](https://godoc.org/gopkg.in/src-d/lookout-sdk.v0/pb)
  - quickstart documentation on [how to write an analyzer](#how-to-create-a-new-analyzer)
 
 
@@ -97,9 +98,11 @@ Please check how to create client in [bblfsh documentation](https://docs.sourced
 Caveats
 ========
  - client: disable secure connection on dialing with `grpc.WithInsecure()`
- - client/server: set [max gRPC message size](https://github.com/grpc/grpc/issues/7927)
+ - client/server: set [max gRPC message size](https://github.com/grpc/grpc/issues/7927):
+    - go: use `pb.NewServer` and `pb.DialContext` instead.
  - client: turn off [gRPC fail-fast](https://github.com/grpc/grpc/blob/master/doc/wait-for-ready.md) mode
    If your analyzer greedy creates a connection to DataServer before one was actually started, you might want to disable fail-fast mode. This way the RPCs are queued until the chanel ready. Here is an [example](https://github.com/src-d/lookout-gometalint-analyzer/blob/7b4b37fb3109299516fbb43017934d131784f49f/cmd/gometalint-analyzer/main.go#L66).
+  - go client/server: use `pb.ToGoGrpcAddress` and `pb.Listen` to support [RFC 3986 URI scheme](https://github.com/grpc/grpc-go/issues/1911)
 
 Release Process
 =================
