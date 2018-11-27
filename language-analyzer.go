@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"net"
 	"os"
 
 	"google.golang.org/grpc"
@@ -20,14 +19,14 @@ import (
 type analyzer struct{}
 
 var portToListen = 2020
-var dataSrvAddr = "localhost:10301"
+var dataSrvAddr, _ = pb.ToGoGrpcAddress("ipv4://localhost:10301")
 var version = "alpha"
 var maxMessageSize = 100 * 1024 * 1024 //100mb
 
 func (*analyzer) NotifyReviewEvent(ctx context.Context, review *pb.ReviewEvent) (*pb.EventResponse, error) {
 	log.Infof("got review request %v", review)
 
-	conn, err := grpc.Dial(dataSrvAddr, grpc.WithInsecure())
+	conn, err := pb.DialContext(ctx, dataSrvAddr, grpc.WithInsecure())
 	if err != nil {
 		log.Errorf(err, "failed to connect to DataServer at %s", dataSrvAddr)
 		return nil, err
@@ -88,18 +87,13 @@ func (*analyzer) NotifyPushEvent(context.Context, *pb.PushEvent) (*pb.EventRespo
 }
 
 func main() {
-	lis, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%d", portToListen))
+	lis, err := pb.Listen(fmt.Sprintf("ipv4://0.0.0.0:%d", portToListen))
 	if err != nil {
 		log.Errorf(err, "failed to listen on port: %d", portToListen)
 		os.Exit(1)
 	}
 
-	opts := []grpc.ServerOption{
-		grpc.MaxRecvMsgSize(maxMessageSize),
-		grpc.MaxSendMsgSize(maxMessageSize),
-	}
-
-	grpcServer := grpc.NewServer(opts...)
+	grpcServer := pb.NewServer()
 	pb.RegisterAnalyzerServer(grpcServer, &analyzer{})
 	log.Infof("starting gRPC Analyzer server at port %d", portToListen)
 	grpcServer.Serve(lis)
