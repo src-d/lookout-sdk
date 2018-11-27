@@ -92,7 +92,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	grpcServer := pb.NewServer()
+	grpcServer := grpc.NewServer()
 	pb.RegisterAnalyzerServer(grpcServer, &analyzer{})
 	log.Infof("starting gRPC Analyzer server at port %d", portToListen)
 	grpcServer.Serve(lis)
