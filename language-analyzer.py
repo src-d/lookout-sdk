@@ -1,35 +1,34 @@
 #!/usr/bin/env python3
 
-# Example Analyser gRPC service implementation.
-# Posts file-level comments for every file with language detected.
+"""
+ Example Analyser gRPC service implementation.
+ Posts file-level comments for every file with language detected.
+"""
 
 from concurrent.futures import ThreadPoolExecutor
 
 import time
 import grpc
 
-from lookout.sdk import service_analyzer_pb2_grpc
+from lookout.sdk import AnalyzerServicer, add_analyzer_to_server
 from lookout.sdk import service_analyzer_pb2
 from lookout.sdk import service_data_pb2_grpc
 from lookout.sdk import service_data_pb2
+from lookout.sdk.grpc import to_grpc_address, create_channel
 
 from bblfsh import filter as filter_uast
 
 port_to_listen = 2021
-data_srv_addr = "localhost:10301"
+data_srv_addr = to_grpc_address("ipv4://localhost:10301")
 version = "alpha"
-grpc_max_msg_size = 100 * 1024 * 1024  # 100mb
 
 
-class Analyzer(service_analyzer_pb2_grpc.AnalyzerServicer):
+class Analyzer(AnalyzerServicer):
     def NotifyReviewEvent(self, request, context):
         print("got review request {}".format(request))
 
         # client connection to DataServe
-        channel = grpc.insecure_channel(data_srv_addr, options=[
-                ("grpc.max_send_message_length", grpc_max_msg_size),
-                ("grpc.max_receive_message_length", grpc_max_msg_size),
-            ])
+        channel = create_channel(data_srv_addr)
         stub = service_data_pb2_grpc.DataStub(channel)
         changes = stub.GetChanges(
             service_data_pb2.ChangesRequest(
@@ -41,7 +40,11 @@ class Analyzer(service_analyzer_pb2_grpc.AnalyzerServicer):
 
         comments = []
         for change in changes:
-            print("analyzing '{}' in {}".format(change.head.path, change.head.language))
+            if not change.HasField("head"):
+                continue
+
+            print("analyzing '{}' in {}".format(
+                change.head.path, change.head.language))
             fns = list(filter_uast(change.head.uast, "//*[@roleFunction]"))
             comments.append(
                 service_analyzer_pb2.Comment(
@@ -56,11 +59,11 @@ class Analyzer(service_analyzer_pb2_grpc.AnalyzerServicer):
 
 def serve():
     server = grpc.server(thread_pool=ThreadPoolExecutor(max_workers=10))
-    service_analyzer_pb2_grpc.add_AnalyzerServicer_to_server(Analyzer(), server)
+    add_analyzer_to_server(Analyzer(), server)
     server.add_insecure_port("0.0.0.0:{}".format(port_to_listen))
     server.start()
 
-    one_day_sec = 60*60*24
+    one_day_sec = 60 * 60 * 24
     try:
         while True:
             time.sleep(one_day_sec)
