@@ -100,9 +100,12 @@ Caveats
  - client: disable secure connection on dialing with `grpc.WithInsecure()`
  - client: set [max gRPC message size](https://github.com/grpc/grpc/issues/7927):
     - go: use `pb.DialContext` instead.
+    - python: use `lookout.sdk.grpc.create_channel` instead.
  - client: turn off [gRPC fail-fast](https://github.com/grpc/grpc/blob/master/doc/wait-for-ready.md) mode
    If your analyzer greedy creates a connection to DataServer before one was actually started, you might want to disable fail-fast mode. This way the RPCs are queued until the chanel ready. Here is an [example](https://github.com/src-d/lookout-gometalint-analyzer/blob/7b4b37fb3109299516fbb43017934d131784f49f/cmd/gometalint-analyzer/main.go#L66).
-  - go client/server: use `pb.ToGoGrpcAddress` and `pb.Listen` to support [RFC 3986 URI scheme](https://github.com/grpc/grpc-go/issues/1911)
+  - client/server RFC 3986 URI scheme support:
+    - go: use `pb.ToGoGrpcAddress` and `pb.Listen`
+    - python: use `lookout.sdk.grpc.to_grpc_address`
 
 Release Process
 =================

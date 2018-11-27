@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
- Example Analyser gRPC service implementation.
+ Example Analyzer gRPC service implementation.
  Posts file-level comments for every file with language detected.
 """
 
