@@ -10,7 +10,7 @@ import (
 )
 
 // maxMessageSize overrides default grpc max. message size to send/receive to/from clients
-var maxMessageSize = 100 * 1024 * 1024 // 100mb
+var maxMessageSize = 100 * 1024 * 1024 // 100MB
 
 //TODO: https://github.com/grpc/grpc-go/issues/1911
 

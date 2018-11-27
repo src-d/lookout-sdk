@@ -21,7 +21,6 @@ type analyzer struct{}
 var portToListen = 2020
 var dataSrvAddr, _ = pb.ToGoGrpcAddress("ipv4://localhost:10301")
 var version = "alpha"
-var maxMessageSize = 100 * 1024 * 1024 //100mb
 
 func (*analyzer) NotifyReviewEvent(ctx context.Context, review *pb.ReviewEvent) (*pb.EventResponse, error) {
 	log.Infof("got review request %v", review)
