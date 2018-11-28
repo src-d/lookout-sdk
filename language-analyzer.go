@@ -60,6 +60,10 @@ func (*analyzer) NotifyReviewEvent(ctx context.Context, review *pb.ReviewEvent) 
 			continue
 		}
 
+		if change.Head == nil {
+			continue
+		}
+
 		log.Infof("analyzing '%s' in %s", change.Head.Path, change.Head.Language)
 
 		//TODO: put your analysis here!
