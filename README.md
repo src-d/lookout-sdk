@@ -1,4 +1,4 @@
-lookout SDK [![GoDoc](https://godoc.org/gopkg.in/src-d/lookout-sdk.v0?status.svg)](https://godoc.org/github.com/src-d/lookout-sdk) [![PyPI version](https://badge.fury.io/py/lookout-sdk.svg)](https://pypi.org/project/lookout-sdk/) [![Build Status](https://travis-ci.org/src-d/lookout-sdk.svg)](https://travis-ci.org/src-d/lookout-sdk)
+lookout SDK [![GoDoc](https://godoc.org/gopkg.in/src-d/lookout-sdk.v0?status.svg)](https://godoc.org/gopkg.in/src-d/lookout-sdk.v0/pb) [![PyPI version](https://badge.fury.io/py/lookout-sdk.svg)](https://pypi.org/project/lookout-sdk/) [![Build Status](https://travis-ci.org/src-d/lookout-sdk.svg)](https://travis-ci.org/src-d/lookout-sdk)
 -----------
 
 What is lookout SDK?
