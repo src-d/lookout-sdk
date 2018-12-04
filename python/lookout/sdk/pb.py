@@ -3,7 +3,7 @@ Re-exporting all grpc related classes/functions for cleaner API
 """
 
 from .service_analyzer_pb2_grpc import \
-    AnalyzerServicer, add_AnalyzerServicer_to_server as add_analyzer_to_server
+    add_AnalyzerServicer_to_server as add_analyzer_to_server
 
 from .event_pb2_grpc import *
 from .event_pb2 import *
