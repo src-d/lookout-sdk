@@ -7,7 +7,6 @@ from .service_analyzer_pb2_grpc import \
 
 from .event_pb2_grpc import *
 from .event_pb2 import *
-from .grpc import *
 from .service_analyzer_pb2_grpc import *
 from .service_analyzer_pb2 import *
 from .service_data_pb2_grpc import *

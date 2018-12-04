@@ -10,11 +10,12 @@ from concurrent.futures import ThreadPoolExecutor
 import time
 import grpc
 from lookout.sdk import pb
+from lookout.sdk.grpc import to_grpc_address, create_channel
 
 from bblfsh import filter as filter_uast
 
 port_to_listen = 2021
-data_srv_addr = pb.to_grpc_address("ipv4://localhost:10301")
+data_srv_addr = to_grpc_address("ipv4://localhost:10301")
 version = "alpha"
 
 
@@ -23,7 +24,7 @@ class Analyzer(pb.AnalyzerServicer):
         print("got review request {}".format(request))
 
         # client connection to DataServe
-        channel = pb.create_channel(data_srv_addr)
+        channel = create_channel(data_srv_addr)
         stub = pb.DataStub(channel)
         changes = stub.GetChanges(
             pb.ChangesRequest(
