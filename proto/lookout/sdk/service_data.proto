@@ -64,6 +64,7 @@ message ChangesRequest {
     bool want_contents = 6;
     bool want_uast = 7 [(gogoproto.customname) = "WantUAST"];
     bool want_language = 8;
+    repeated string include_languages = 9;
 }
 
 message FilesRequest {
@@ -75,4 +76,5 @@ message FilesRequest {
     bool want_uast = 6 [(gogoproto.customname) = "WantUAST"];
     // WantLanguage set to true if UAST was requested
     bool want_language = 7;
+    repeated string include_languages = 8;
 }
