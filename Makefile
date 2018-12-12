@@ -9,6 +9,8 @@ $(MAKEFILE):
 	git clone --quiet --depth 1 -b $(CI_BRANCH) $(CI_REPOSITORY) $(CI_PATH);
 -include $(MAKEFILE)
 
+# Tools
+TOC_GENERATOR := $(CI_PATH)/gh-md-toc
 
 # Generate go+python code from .proto files
 .PHONY: check-protoc

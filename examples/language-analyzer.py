@@ -23,30 +23,31 @@ class Analyzer(pb.AnalyzerServicer):
     def NotifyReviewEvent(self, request, context):
         print("got review request {}".format(request))
 
-        # client connection to DataServe
-        channel = create_channel(data_srv_addr)
-        stub = pb.DataStub(channel)
-        changes = stub.GetChanges(
-            pb.ChangesRequest(
-                head=request.commit_revision.head,
-                base=request.commit_revision.base,
-                want_contents=False,
-                want_uast=True,
-                exclude_vendored=True))
-
         comments = []
-        for change in changes:
-            if not change.HasField("head"):
-                continue
 
-            print("analyzing '{}' in {}".format(
-                change.head.path, change.head.language))
-            fns = list(filter_uast(change.head.uast, "//*[@roleFunction]"))
-            comments.append(
-                pb.Comment(
-                    file=change.head.path,
-                    line=0,
-                    text="language: {}, functions: {}".format(change.head.language, len(fns))))
+        # client connection to DataServe
+        with create_channel(data_srv_addr) as channel:
+            stub = pb.DataStub(channel)
+            changes = stub.GetChanges(
+                pb.ChangesRequest(
+                    head=request.commit_revision.head,
+                    base=request.commit_revision.base,
+                    want_contents=False,
+                    want_uast=True,
+                    exclude_vendored=True))
+
+            for change in changes:
+                if not change.HasField("head"):
+                    continue
+
+                print("analyzing '{}' in {}".format(
+                    change.head.path, change.head.language))
+                fns = list(filter_uast(change.head.uast, "//*[@roleFunction]"))
+                text = "language: {}, functions: {}".format(
+                    change.head.language, len(fns))
+                comments.append(pb.Comment(
+                    file=change.head.path, line=0, text=text))
+
         return pb.EventResponse(analyzer_version=version, comments=comments)
 
     def NotifyPushEvent(self, request, context):
