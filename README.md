@@ -3,19 +3,6 @@
 Toolkit for writing new analyzers for **[source{d} Lookout](https://github.com/src-d/lookout)**.
 
 
-**Table of Contents**
-
-<!--ts-->
-   * [What Does the SDK Provide?](#what-does-the-sdk-provide)
-   * [Caveats](#caveats)
-      * [DataService](#dataservice)
-   * [Contributing](#contributing)
-      * [Community](#community)
-   * [Code of Conduct](#code-of-conduct)
-   * [License](#license)
-<!--te-->
-
-
 # What Does the SDK Provide?
 
 _For the complete documentation of **source{d} Lookout**, please take a look at [http://docs.sourced.tech/lookout](http://docs.sourced.tech/lookout)._

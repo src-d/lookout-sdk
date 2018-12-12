@@ -22,12 +22,3 @@ protogen: check-protoc
 		./_tools/protogen_golang.sh
 		pip3 install --user grpcio_tools==1.13.0
 		./_tools/protogen_python.sh
-
-.PHONY: toc
-toc: $(TOC_GENERATOR)
-	$(TOC_GENERATOR) --insert README.md
-	rm -f README.md.orig.* README.md.toc.*
-
-$(TOC_GENERATOR):
-	wget https://raw.githubusercontent.com/ekalinin/github-markdown-toc/master/gh-md-toc -O $(TOC_GENERATOR)
-	chmod a+x $(TOC_GENERATOR)
