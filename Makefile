@@ -12,6 +12,10 @@ $(MAKEFILE):
 # Tools
 TOC_GENERATOR := $(CI_PATH)/gh-md-toc
 
+ifdef ($(VIRTUAL_ENV),)
+PIP_ARGS := --user
+endif
+
 # Generate go+python code from .proto files
 .PHONY: check-protoc
 check-protoc:
@@ -20,5 +24,5 @@ check-protoc:
 protogen: check-protoc
 		$(GOCMD) get github.com/gogo/protobuf/protoc-gen-gogofaster
 		./_tools/protogen_golang.sh
-		pip3 install --user grpcio_tools==1.13.0
+		pip3 install $(PIP_ARGS) grpcio_tools==1.13.0
 		./_tools/protogen_python.sh
