@@ -20,12 +20,3 @@ find "${out_dir}" -name '*.py' -exec sed -i -e 's/^from github/from bblfsh.githu
 find "${out_dir}" -name '*.py' -exec sed -i -e "s/import_module('gopkg.in/import_module('bblfsh.gopkg.in/g" {} \;
 # on macOS sed -i -e produces backups with *-e extension by default
 find "${out_dir}" -name '*.py-e' -delete
-
-# make a python packages
-<< END >> "${out_dir}/lookout/__init__.py"
-# DO NOT CHANGE OR ADD ANYTHING HERE
-import pkg_resources
-pkg_resources.declare_namespace(__name__)
-__version__ = 0, 0, 1
-END
-touch "${out_dir}/lookout/sdk/__init__.py"
