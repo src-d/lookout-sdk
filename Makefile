@@ -20,9 +20,11 @@ endif
 .PHONY: check-protoc
 check-protoc:
 		./_tools/install-protoc-maybe.sh
+.PHONY: check-gogofaster
+check-gogofaster:
+		./_tools/install-gogofaster-maybe.sh
 .PHONY: protogen
-protogen: check-protoc
-		$(GOCMD) get github.com/gogo/protobuf/protoc-gen-gogofaster
+protogen: check-protoc check-gogofaster
 		./_tools/protogen_golang.sh
 		pip3 install $(PIP_ARGS) grpcio_tools==1.13.0
 		./_tools/protogen_python.sh

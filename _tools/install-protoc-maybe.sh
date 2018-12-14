@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Checks Protobuf compiler version.
-# If absent, installs one in protoc_dir from GH release.
+# Checks Protobuf compiler installed in local 'protoc_dir' dir.
+# If it's absent or not the expected version, installs it in 'protoc_dir' from GH release.
 
 PROTOC_VER="3.6.0"
 OS="$(uname)"

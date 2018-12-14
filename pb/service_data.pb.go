@@ -37,7 +37,7 @@ type File struct {
 	// Raw content of the file.
 	Content []byte `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
 	// UAST.
-	UAST *uast.Node `protobuf:"bytes,5,opt,name=uast" json:"uast,omitempty"`
+	UAST *uast.Node `protobuf:"bytes,5,opt,name=uast,proto3" json:"uast,omitempty"`
 	// Programming/data/markup language of the file.
 	Language string `protobuf:"bytes,6,opt,name=language,proto3" json:"language,omitempty"`
 }
@@ -76,8 +76,8 @@ func (m *File) XXX_DiscardUnknown() {
 var xxx_messageInfo_File proto.InternalMessageInfo
 
 type Change struct {
-	Base *File `protobuf:"bytes,1,opt,name=base" json:"base,omitempty"`
-	Head *File `protobuf:"bytes,2,opt,name=head" json:"head,omitempty"`
+	Base *File `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
+	Head *File `protobuf:"bytes,2,opt,name=head,proto3" json:"head,omitempty"`
 }
 
 func (m *Change) Reset()         { *m = Change{} }
@@ -114,15 +114,15 @@ func (m *Change) XXX_DiscardUnknown() {
 var xxx_messageInfo_Change proto.InternalMessageInfo
 
 type ChangesRequest struct {
-	Base             *ReferencePointer `protobuf:"bytes,1,opt,name=base" json:"base,omitempty"`
-	Head             *ReferencePointer `protobuf:"bytes,2,opt,name=head" json:"head,omitempty"`
+	Base             *ReferencePointer `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
+	Head             *ReferencePointer `protobuf:"bytes,2,opt,name=head,proto3" json:"head,omitempty"`
 	IncludePattern   string            `protobuf:"bytes,3,opt,name=include_pattern,json=includePattern,proto3" json:"include_pattern,omitempty"`
 	ExcludePattern   string            `protobuf:"bytes,4,opt,name=exclude_pattern,json=excludePattern,proto3" json:"exclude_pattern,omitempty"`
 	ExcludeVendored  bool              `protobuf:"varint,5,opt,name=exclude_vendored,json=excludeVendored,proto3" json:"exclude_vendored,omitempty"`
 	WantContents     bool              `protobuf:"varint,6,opt,name=want_contents,json=wantContents,proto3" json:"want_contents,omitempty"`
 	WantUAST         bool              `protobuf:"varint,7,opt,name=want_uast,json=wantUast,proto3" json:"want_uast,omitempty"`
 	WantLanguage     bool              `protobuf:"varint,8,opt,name=want_language,json=wantLanguage,proto3" json:"want_language,omitempty"`
-	IncludeLanguages []string          `protobuf:"bytes,9,rep,name=include_languages,json=includeLanguages" json:"include_languages,omitempty"`
+	IncludeLanguages []string          `protobuf:"bytes,9,rep,name=include_languages,json=includeLanguages,proto3" json:"include_languages,omitempty"`
 }
 
 func (m *ChangesRequest) Reset()         { *m = ChangesRequest{} }
@@ -159,7 +159,7 @@ func (m *ChangesRequest) XXX_DiscardUnknown() {
 var xxx_messageInfo_ChangesRequest proto.InternalMessageInfo
 
 type FilesRequest struct {
-	Revision        *ReferencePointer `protobuf:"bytes,1,opt,name=revision" json:"revision,omitempty"`
+	Revision        *ReferencePointer `protobuf:"bytes,1,opt,name=revision,proto3" json:"revision,omitempty"`
 	IncludePattern  string            `protobuf:"bytes,2,opt,name=include_pattern,json=includePattern,proto3" json:"include_pattern,omitempty"`
 	ExcludePattern  string            `protobuf:"bytes,3,opt,name=exclude_pattern,json=excludePattern,proto3" json:"exclude_pattern,omitempty"`
 	ExcludeVendored bool              `protobuf:"varint,4,opt,name=exclude_vendored,json=excludeVendored,proto3" json:"exclude_vendored,omitempty"`
@@ -167,7 +167,7 @@ type FilesRequest struct {
 	WantUAST        bool              `protobuf:"varint,6,opt,name=want_uast,json=wantUast,proto3" json:"want_uast,omitempty"`
 	// WantLanguage set to true if UAST was requested
 	WantLanguage     bool     `protobuf:"varint,7,opt,name=want_language,json=wantLanguage,proto3" json:"want_language,omitempty"`
-	IncludeLanguages []string `protobuf:"bytes,8,rep,name=include_languages,json=includeLanguages" json:"include_languages,omitempty"`
+	IncludeLanguages []string `protobuf:"bytes,8,rep,name=include_languages,json=includeLanguages,proto3" json:"include_languages,omitempty"`
 }
 
 func (m *FilesRequest) Reset()         { *m = FilesRequest{} }
