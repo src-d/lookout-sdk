@@ -1,20 +1,25 @@
 #!/bin/bash
 #
 # Generates Protobuf + gRCP for Golang
-# Assumes 'protoc' and 'protoc-gen-gogofaster' binaries are installed
+# Assumes 'protoc' and 'protoc-gen-gogofaster' binaries are installed in local './protoc/bin' dir
 
 PROTOC="./protoc/bin/protoc"
+GOGOFASTER="./protoc/bin/protoc-gen-gogofaster"
 sdk="lookout/sdk"
 src="proto"
 dst="golang"
 
-
 [[ -f $PROTOC ]] >/dev/null 2>&1 || { echo "Protobuf compiler is required but not found in ${PROTOC}" >&2; exit 1; }
+
+[[ -f $GOGOFASTER ]] >/dev/null 2>&1 || { echo "protoc-gen-gogofaster is required but not found in ${GOGOFASTER}" >&2; exit 1; }
 
 if ! mkdir -p "${dst}" ; then
     echo "Failed to create ${dst}"
     exit 2
 fi
+
+# 'protoc-gen-gogofaster' must be under $PATH to be found by 'protoc'
+export PATH=./protoc/bin:$PATH
 
 "${PROTOC}" -I proto \
     --gogofaster_out=plugins=grpc,\
