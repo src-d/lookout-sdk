@@ -5,9 +5,9 @@ Toolkit for writing new analyzers for **[source{d} Lookout](https://github.com/s
 
 # What Does the SDK Provide?
 
-_For the complete documentation of **source{d} Lookout**, please take a look at [https://github.com/src-d/lookout](https://github.com/src-d/lookout)._
+_For the complete documentation of **source{d} Lookout**, please take a look at [https://docs.sourced.tech/lookout](https://docs.sourced.tech/lookout)._
 
-_For detailed information about the different parts of Lookout, and how they interact you can go to the [Lookout architecture guide](https://github.com/src-d/lookout/blob/master/docs/architecture.md)._
+_For detailed information about the different parts of Lookout, and how they interact you can go to the [Lookout architecture guide](https://docs.sourced.tech/lookout/architecture)._
 
 **lookout-sdk** provides:
 
