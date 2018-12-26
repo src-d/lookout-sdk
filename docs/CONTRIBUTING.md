@@ -20,18 +20,6 @@ To generate the code for the gRPC services run:
 $ make protogen
 ```
 
-### Dependencies
-
-Go dependencies are managed with [dep](https://golang.github.io/dep/). Use `make godep` to make sure the `vendor` directory is up to date, and commit any necessary changes.
-
-### TOC
-
-Please update the readme Table of Contents with:
-```bash
-make toc
-```
-
-
 ## Release Process
 
  1. Make sure all the [auto-generated code](#generated-code) is up to date and committed.
