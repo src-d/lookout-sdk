@@ -31,15 +31,15 @@ class DataServicer(object):
   """
 
   def GetChanges(self, request, context):
-    # missing associated documentation comment in .proto file
-    pass
+    """GetChanges returns a stream of Changes
+    """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
   def GetFiles(self, request, context):
-    # missing associated documentation comment in .proto file
-    pass
+    """GetFiles returns a stream of Files
+    """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
