@@ -25,10 +25,13 @@ option (gogoproto.goproto_getters_all) = false;
 
 // Data services exposes VCS repositories.
 service Data {
+    // GetChanges returns a stream of Changes
     rpc GetChanges (ChangesRequest) returns (stream Change);
+    // GetFiles returns a stream of Files
     rpc GetFiles (FilesRequest) returns (stream File);
 }
 
+// File is a repository file.
 message File {
     option (gogoproto.sizer) = false;
     option (gogoproto.protosizer) = true;
@@ -37,44 +40,82 @@ message File {
     string path = 1;
     // POSIX-style file mode.
     uint32 mode = 2;
-    // Hash of the file contents.
+    // SHA1 hash of the file contents.
     string hash = 3;
-    // Raw content of the file.
+    // Raw content of the file. It will be empty if WantContents was not set in
+    // the request.
     bytes content = 4;
-    // UAST.
+    // UAST is a Babelfish v1 UAST of the file contents. It will be empty if
+    // WantUAST was not set in the request.
     gopkg.in.bblfsh.sdk.v1.uast.Node uast = 5 [(gogoproto.customname) = "UAST"];
-    // Programming/data/markup language of the file.
+    // Programming/data/markup language of the file as returned by enry. It will
+    // be empty unless WantLanguage or WantUAST were set in the request.
     string language = 6;
 }
 
+// Change contains two versions of a File in a revision range.
 message Change {
     option (gogoproto.sizer) = false;
     option (gogoproto.protosizer) = true;
     
+    // Base is the file version at the base of the revision range. It will be
+    // empty for new files.
     File base = 1;
+    // Head is the file version at the head of the revision range. It will be
+    // empty for deleted files.
     File head = 2;
 }
 
+// ChangesRequest defines a request of Changes to the Data service.
 message ChangesRequest {
+    // Base of the revision range.
     ReferencePointer base = 1;
+    // Head of the revision range.
     ReferencePointer head = 2;
+    // IncludePattern is a regexp. Only the files with matching file paths will
+    // be included in the response.
     string include_pattern = 3;
+    // ExcludePattern is a regexp. Any files with matching file paths will be
+    // excluded from the response.
     string exclude_pattern = 4;
+    // ExcludeVendored will exclude any verdored file from the response. The
+    // list of paths considered as vendor is available at:
+    // https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml
     bool exclude_vendored = 5;
+    // WantContents will fill the response file Content.
     bool want_contents = 6;
+    // WantUAST will fill the response file UAST and Language.
     bool want_uast = 7 [(gogoproto.customname) = "WantUAST"];
+    // WantLanguage will fill the response file Language.
     bool want_language = 8;
+    // IncludeLanguages will filter files by language. The language names are
+    // case insensitive. The list of language names is available at
+    // https://github.com/github/linguist/blob/master/lib/linguist/languages.yml
     repeated string include_languages = 9;
 }
 
+// FilesRequest defines a request of Files to the Data service.
 message FilesRequest {
+    // Revision of the file.
     ReferencePointer revision = 1;
+    // IncludePattern is a regexp. Only the files with matching file paths will
+    // be included in the response.
     string include_pattern = 2;
+    // ExcludePattern is a regexp. Any files with matching file paths will be
+    // excluded from the response.
     string exclude_pattern = 3;
+    // ExcludeVendored will exclude any verdored file from the response. The
+    // list of paths considered as vendor is available at:
+    // https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml
     bool exclude_vendored = 4;
+    // WantContents will fill the response file Content.
     bool want_contents = 5;
+    // WantUAST will fill the response file UAST and Language.
     bool want_uast = 6 [(gogoproto.customname) = "WantUAST"];
-    // WantLanguage set to true if UAST was requested
+    // WantLanguage will fill the response file Language.
     bool want_language = 7;
+    // IncludeLanguages will filter files by language. The language names are
+    // case insensitive. The list of language names is available at
+    // https://github.com/github/linguist/blob/master/lib/linguist/languages.yml
     repeated string include_languages = 8;
 }

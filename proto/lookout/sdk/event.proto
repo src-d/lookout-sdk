@@ -25,19 +25,19 @@ option (gogoproto.goproto_getters_all) = false;
 
 // CommitRevision defines a range of commits, from a base to a head.
 message CommitRevision {
-    // Base of the revision.
+    // Base of the revision range.
     ReferencePointer base = 1 [(gogoproto.nullable) = false];
-    // Head of the revision.
+    // Head of the revision range.
     ReferencePointer head = 2 [(gogoproto.nullable) = false];
 }
 
-// ReferencePointer is the reference to a git refererence in a repository.
+// ReferencePointer is a pointer to a git refererence in a repository.
 message ReferencePointer {
     // InternalRepositoryURL is the original clone URL, not canonicalized.
     string internal_repository_url = 1 [(gogoproto.customname) = "InternalRepositoryURL"];
-    // ReferenceName is the name of the reference pointing.
+    // ReferenceName is the name of the target reference.
     string reference_name = 2 [(gogoproto.casttype) = "gopkg.in/src-d/go-git.v4/plumbing.ReferenceName"];
-    // Hash is the hash of the reference pointing.
+    // Hash is the full SHA1 of the target reference.
     string hash = 3;
 }
 
@@ -47,19 +47,19 @@ message PushEvent {
     string provider = 1;
     // InternalId is the internal id for this event at the provider.
     string internal_id = 2 [(gogoproto.customname) = "InternalID"];
-    // CreateAt is the timestamp of the creation date of the push event.
+    // CreatedAt is the timestamp of the creation date of the push event.
     google.protobuf.Timestamp created_at = 3 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
     // Commits is the number of commits in the push.
     uint32 commits = 4;
-    // Commits is the number of distinct commits in the push.
+    // DistinctCommits is the number of distinct commits in the push.
     uint32 distinct_commits = 5;
-    // Configuration contains any configuration related to specific analyzer
+    // Configuration related to the specific analyzer receiving the PushEvent.
     google.protobuf.Struct configuration = 6 [(gogoproto.nullable) = false];
-
+    // CommitRevision is the revision range of this push.
     CommitRevision commit_revision = 7 [(gogoproto.nullable) = false, (gogoproto.embed) = true];
 }
 
-// ReviewEvent represents a Review (PullRequest in case of Github) being created or updated.
+// ReviewEvent represents a Review (pull request in case of GitHub) being created or updated.
 message ReviewEvent {
     // UAST uses protosizer instead of sizer, this is required for interoperability
     // with the generated proto from bblfsh.
@@ -69,7 +69,7 @@ message ReviewEvent {
     string provider = 1;
     // InternalId is the internal id for this event at the provider.
     string internal_id = 2 [(gogoproto.customname) = "InternalID"];
-    // CreateAt is the timestamp of the creation date of the push event.
+    // CreatedAt is the timestamp of the creation date of the review event.
     google.protobuf.Timestamp created_at = 3 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
     // UpdatedAt is the timestamp of the last modification of the pull request.
     google.protobuf.Timestamp updated_at = 4 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
@@ -79,12 +79,12 @@ message ReviewEvent {
     ReferencePointer source = 8 [(gogoproto.nullable) = false];
     // Merge reference to the branch and repository where the merged Pull Request is stored.
     ReferencePointer merge = 9 [(gogoproto.nullable) = false];
-    // Configuration contains any configuration related to specific analyzer
+    // Configuration related to the specific analyzer receiving the ReviewEvent.
     google.protobuf.Struct configuration = 10 [(gogoproto.nullable) = false];
     // RepositoryId is internal provider repository id
     uint32 repository_id = 11 [(gogoproto.customname) = "RepositoryID"];
     // Number is internal provider id of review scoped by repository
     uint32 number = 12;
-
+    // CommitRevision is the revision range of this review.
     CommitRevision commit_revision = 7 [(gogoproto.nullable) = false, (gogoproto.embed) = true];
 }
