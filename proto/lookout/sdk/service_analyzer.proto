@@ -28,12 +28,20 @@ option (gogoproto.goproto_getters_all) = false;
 // the server, we might want to implement sending results as a callback. For
 // now, this is kept simple.
 service Analyzer {
+    // NotifyReviewEvent returns comments for a ReviewEvent.
     rpc NotifyReviewEvent (ReviewEvent) returns (EventResponse);
+    // NotifyPushEvent is not expected to return any comments. Its purpose for
+    // now is to notify the analyzer of a new push to a repository, that could
+    // be used to trigger training tasks over new contents.
     rpc NotifyPushEvent (PushEvent) returns (EventResponse);
 }
 
+// EventResponse contains the results of a Review or Push event.
 message EventResponse {
+    // AnalyzerVersion must be set to the current analyzer version. Used for
+    // logging.
     string analyzer_version = 1;
+    // Comments to post as the analysis result.
     repeated Comment comments = 2;
     // repeated Patch patches = 3;
 }

@@ -40,15 +40,17 @@ class AnalyzerServicer(object):
   """
 
   def NotifyReviewEvent(self, request, context):
-    # missing associated documentation comment in .proto file
-    pass
+    """NotifyReviewEvent returns comments for a ReviewEvent.
+    """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
   def NotifyPushEvent(self, request, context):
-    # missing associated documentation comment in .proto file
-    pass
+    """NotifyPushEvent is not expected to return any comments. Its purpose for
+    now is to notify the analyzer of a new push to a repository, that could
+    be used to trigger training tasks over new contents.
+    """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
