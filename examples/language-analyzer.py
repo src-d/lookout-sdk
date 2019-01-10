@@ -14,7 +14,7 @@ from lookout.sdk.grpc import to_grpc_address, create_channel
 
 from bblfsh import filter as filter_uast
 
-port_to_listen = 2021
+port_to_listen = 9930
 data_srv_addr = to_grpc_address("ipv4://localhost:10301")
 version = "alpha"
 

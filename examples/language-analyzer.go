@@ -10,7 +10,7 @@ import (
 
 	"google.golang.org/grpc"
 	"gopkg.in/bblfsh/client-go.v2/tools"
-	"gopkg.in/src-d/go-log.v1"
+	log "gopkg.in/src-d/go-log.v1"
 )
 
 // Example Analyser gRPC service implementation.
@@ -19,7 +19,7 @@ import (
 
 type analyzer struct{}
 
-var portToListen = 2020
+var portToListen = 9930
 var dataSrvAddr, _ = pb.ToGoGrpcAddress("ipv4://localhost:10301")
 var version = "alpha"
 
