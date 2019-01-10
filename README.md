@@ -38,6 +38,8 @@ When DataService is being dialed, you should:
 - turn off [gRPC fail-fast](https://github.com/grpc/grpc/blob/master/doc/wait-for-ready.md) mode if your analyzer creates a connection to DataServer before it was actually started. This way the RPCs are queued until the chanel is ready:
   - go: using `grpc.FailFast(false)`
 ([example](https://github.com/src-d/lookout-gometalint-analyzer/blob/7b4b37fb3109299516fbb43017934d131784f49f/cmd/gometalint-analyzer/main.go#L66)).
+- golang: reset connection backoff to DataServer on event:
+    if you keep the connection to DataServer open you need to reset the backoff when your analyzer receives a new event. Use the [`conn.ResetConnectBackoff`](https://godoc.org/google.golang.org/grpc#ClientConn.ResetConnectBackoff) method in your event handlers. It's needed to avoid broken connections after a `lookoutd` redeployment. In case of a long restart of `lookoutd` gRPC server, the backoff timeout may increase so much that the analyzer will not be able to reconnect before it makes the new request to DataServer.
 
 
 # Contributing
