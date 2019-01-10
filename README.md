@@ -27,14 +27,14 @@ For the gRPC client and server please follow these requirements:
 - support [RFC 3986 URI scheme](https://github.com/grpc/grpc-go/issues/1911); lookout-sdk includes helpers for this:
   - go: using `pb.ToGoGrpcAddress` and `pb.Listen`.
   - python: using `lookout.sdk.grpc.to_grpc_address`.
+- use insecure connection:
+  - currently lookout expects to use insecure gRPC connections, as provided by `pb.DialContext`
+  - python: run server using `server.add_insecure_port(address)` ([example](https://github.com/src-d/lookout-sdk/blob/master/examples/language-analyzer.py#L63)).
 
 ## DataService
 
 When DataService is being dialed, you should:
 
-- disable secure connection:
-  - go: using `grpc.WithInsecure()` ([example](https://github.com/src-d/lookout-gometalint-analyzer/blob/7b4b37fb3109299516fbb43017934d131784f49f/cmd/gometalint-analyzer/main.go#L65)).
-  - python: using `server.add_insecure_port(address)` ([example](https://github.com/src-d/lookout-sdk/blob/master/examples/language-analyzer.py#L63)).
 - turn off [gRPC fail-fast](https://github.com/grpc/grpc/blob/master/doc/wait-for-ready.md) mode if your analyzer creates a connection to DataServer before it was actually started. This way the RPCs are queued until the chanel is ready:
   - go: using `grpc.FailFast(false)`
 ([example](https://github.com/src-d/lookout-gometalint-analyzer/blob/7b4b37fb3109299516fbb43017934d131784f49f/cmd/gometalint-analyzer/main.go#L66)).
