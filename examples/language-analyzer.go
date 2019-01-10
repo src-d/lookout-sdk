@@ -10,7 +10,7 @@ import (
 
 	"google.golang.org/grpc"
 	"gopkg.in/bblfsh/client-go.v2/tools"
-	"gopkg.in/src-d/go-log.v1"
+	log "gopkg.in/src-d/go-log.v1"
 )
 
 // Example Analyser gRPC service implementation.
@@ -26,7 +26,7 @@ var version = "alpha"
 func (*analyzer) NotifyReviewEvent(ctx context.Context, review *pb.ReviewEvent) (*pb.EventResponse, error) {
 	log.Infof("got review request %v", review)
 
-	conn, err := pb.DialContext(ctx, dataSrvAddr, grpc.WithInsecure())
+	conn, err := pb.DialContext(ctx, dataSrvAddr)
 	if err != nil {
 		log.Errorf(err, "failed to connect to DataServer at %s", dataSrvAddr)
 		return nil, err
