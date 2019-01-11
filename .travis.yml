@@ -81,8 +81,8 @@ jobs:
         - pip3 install twine
         - cd python
       script:
-        - python3 setup.py bdist_wheel
-        - twine upload dist/*py3-none-any* -u $PYPI_LOGIN -p $PYPI_PASS
+        - python3 setup.py sdist bdist_wheel
+        - twine upload dist/*.tar.gz dist/*py3-none-any* -u $PYPI_LOGIN -p $PYPI_PASS
       skip_cleanup: true
 
 before_cache:
