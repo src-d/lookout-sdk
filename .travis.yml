@@ -68,7 +68,7 @@ jobs:
       language: go
       go: '1.10'
       env:
-        - PYENV_VERSION="3.6"
+        - PYENV_VERSION="3.6.7"
       script:
         - make protogen
         - make no-changes-in-commit
