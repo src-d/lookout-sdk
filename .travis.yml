@@ -39,7 +39,8 @@ jobs:
         - grep -v -i "error" ./py-analyzer.log > /dev/null
         - grep -v -i "error" ./sdk.log > /dev/null
 
-    - name: 'Golang: example integration tests'
+    - &golangIntegrationTest
+      name: 'Golang 1.10: example integration tests'
       stage: test
       language: go
       go: '1.10'
@@ -55,7 +56,12 @@ jobs:
         - grep -v -i "error" ./go-analyzer.log > /dev/null
         - grep -v -i "error" ./sdk.log > /dev/null
 
-    - name: 'Golang test'
+    - <<: *golangIntegrationTest
+      name: 'Golang 1.11: example integration tests'
+      go: '1.11'
+
+    - &golangTest
+      name: 'Golang 1.10: test'
       stage: test
       language: go
       go: '1.10'
@@ -63,7 +69,12 @@ jobs:
         - make dependencies
         - make test
 
-    - name: 'Generated code'
+    - <<: *golangTest
+      name: 'Golang 1.11: test'
+      go: '1.11'
+
+    - &generatedCode
+      name: 'Golang 1.10: generated code'
       stage: test
       language: go
       go: '1.10'
@@ -72,6 +83,10 @@ jobs:
       script:
         - make protogen
         - make no-changes-in-commit
+
+    - <<: *generatedCode
+      name: 'Golang 1.11: generated code'
+      go: '1.11'
 
     - name: 'Python: release a library'
       stage: release
