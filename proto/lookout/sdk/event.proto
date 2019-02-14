@@ -77,8 +77,6 @@ message ReviewEvent {
     bool is_mergeable = 5;
     // Source reference to the original branch and repository where the changes came from.
     ReferencePointer source = 8 [(gogoproto.nullable) = false];
-    // Merge reference to the branch and repository where the merged Pull Request is stored.
-    ReferencePointer merge = 9 [(gogoproto.nullable) = false];
     // Configuration related to the specific analyzer receiving the ReviewEvent.
     google.protobuf.Struct configuration = 10 [(gogoproto.nullable) = false];
     // RepositoryId is internal provider repository id
