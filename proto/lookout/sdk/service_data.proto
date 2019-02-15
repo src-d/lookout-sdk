@@ -92,6 +92,10 @@ message ChangesRequest {
     // case insensitive. The list of language names is available at
     // https://github.com/github/linguist/blob/master/lib/linguist/languages.yml
     repeated string include_languages = 9;
+    // TwoDotsMode will calculate the changes between base..head
+    // Its default value is false, working as base...head, that calculates the
+    // changes introduced by head, not accessible by base.
+    bool two_dots_mode = 10;
 }
 
 // FilesRequest defines a request of Files to the Data service.
