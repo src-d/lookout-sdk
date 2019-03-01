@@ -6,11 +6,10 @@ import (
 	"io"
 	"os"
 
-	"gopkg.in/src-d/lookout-sdk.v0/pb"
-
 	"google.golang.org/grpc"
 	"gopkg.in/bblfsh/client-go.v2/tools"
 	log "gopkg.in/src-d/go-log.v1"
+	"gopkg.in/src-d/lookout-sdk.v0/pb"
 )
 
 // Example Analyser gRPC service implementation.
@@ -24,16 +23,43 @@ var dataSrvAddr, _ = pb.ToGoGrpcAddress("ipv4://localhost:10301")
 var version = "alpha"
 
 func (*analyzer) NotifyReviewEvent(ctx context.Context, review *pb.ReviewEvent) (*pb.EventResponse, error) {
-	log.Infof("got review request %v", review)
+	logger := log.With(log.Fields(pb.GetLogFields(ctx)))
 
-	conn, err := pb.DialContext(ctx, dataSrvAddr)
+	logger.Infof("got review request %v", review)
+
+	logFn := func(fields pb.Fields, format string, args ...interface{}) {
+		// Do whatever you want with the provided fields
+		msg := fmt.Sprintf(format, args...)
+		logger.Infof("%s [%v]", msg, fields)
+	}
+
+	// Here you can also use pb.DialContext(ctx, dataSrvAddr)
+	// if you don't want to log details of every connection
+	conn, err := pb.DialContextWithInterceptors(
+		ctx, dataSrvAddr,
+		[]grpc.StreamClientInterceptor{
+			pb.LogStreamClientInterceptor(logFn),
+		},
+		[]grpc.UnaryClientInterceptor{
+			pb.LogUnaryClientInterceptor(logFn),
+		},
+	)
+
 	if err != nil {
-		log.Errorf(err, "failed to connect to DataServer at %s", dataSrvAddr)
+		logger.Errorf(err, "failed to connect to DataServer at %s", dataSrvAddr)
 		return nil, err
 	}
 	defer conn.Close()
 
 	dataClient := pb.NewDataClient(conn)
+
+	// Add some log fields that will be available to the data server
+	// using `pb.AddLogFields`.
+	ctx = pb.AddLogFields(ctx, pb.Fields{
+		"some-string-key": "some-value",
+		"some-int-key":    1,
+	})
+
 	changes, err := dataClient.GetChanges(ctx, &pb.ChangesRequest{
 		Head:            &review.Head,
 		Base:            &review.Base,
@@ -42,7 +68,7 @@ func (*analyzer) NotifyReviewEvent(ctx context.Context, review *pb.ReviewEvent) 
 		ExcludeVendored: true,
 	})
 	if err != nil {
-		log.Errorf(err, "GetChanges from DataServer %s failed", dataSrvAddr)
+		logger.Errorf(err, "GetChanges from DataServer %s failed", dataSrvAddr)
 		return nil, err
 	}
 
@@ -53,7 +79,7 @@ func (*analyzer) NotifyReviewEvent(ctx context.Context, review *pb.ReviewEvent) 
 			break
 		}
 		if err != nil {
-			log.Errorf(err, "GetChanges from DataServer %s failed", dataSrvAddr)
+			logger.Errorf(err, "GetChanges from DataServer %s failed", dataSrvAddr)
 			return nil, err
 		}
 
@@ -61,14 +87,14 @@ func (*analyzer) NotifyReviewEvent(ctx context.Context, review *pb.ReviewEvent) 
 			continue
 		}
 
-		log.Infof("analyzing '%s' in %s", change.Head.Path, change.Head.Language)
+		logger.Infof("analyzing '%s' in %s", change.Head.Path, change.Head.Language)
 
 		//TODO: put your analysis here!
 
 		query := "//*[@roleFunction]"
 		fns, err := tools.Filter(change.Head.UAST, query)
 		if err != nil {
-			log.Errorf(err, "quering UAST from %s with %s failed", change.Head.Path, query)
+			logger.Errorf(err, "quering UAST from %s with %s failed", change.Head.Path, query)
 			return nil, err
 		}
 
@@ -93,7 +119,23 @@ func main() {
 		os.Exit(1)
 	}
 
-	grpcServer := grpc.NewServer()
+	logFn := func(fields pb.Fields, format string, args ...interface{}) {
+		// Do whatever you want with the provided fields
+		msg := fmt.Sprintf(format, args...)
+		log.Infof("%s [%v]", msg, fields)
+	}
+
+	// Here you can also use pb.NewServer()
+	// if you don't want to log details of every connection
+	grpcServer := pb.NewServerWithInterceptors(
+		[]grpc.StreamServerInterceptor{
+			pb.LogStreamServerInterceptor(logFn),
+		},
+		[]grpc.UnaryServerInterceptor{
+			pb.LogUnaryServerInterceptor(logFn),
+		},
+	)
+
 	pb.RegisterAnalyzerServer(grpcServer, &analyzer{})
 	log.Infof("starting gRPC Analyzer server at port %d", portToListen)
 	grpcServer.Serve(lis)
