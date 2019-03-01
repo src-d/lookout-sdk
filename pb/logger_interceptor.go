@@ -1,4 +1,4 @@
-package grpchelper
+package pb
 
 import (
 	"context"
@@ -6,11 +6,10 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
-	"gopkg.in/src-d/lookout-sdk.v0/pb"
 )
 
 // LogFn is the function used to log the messages
-type LogFn func(msg string, fields pb.Fields)
+type LogFn func(fields Fields, format string, args ...interface{})
 
 // LogUnaryServerInterceptor returns a new unary server interceptor that logs
 // request/response.
@@ -19,12 +18,12 @@ func LogUnaryServerInterceptor(log LogFn) grpc.UnaryServerInterceptor {
 		startTime := time.Now()
 
 		logCtx := buildServerRequestCtx(ctx, info.FullMethod)
-		log("gRPC unary server call started", pb.GetLogFields(logCtx))
+		log(GetLogFields(logCtx), "gRPC unary server call started")
 
 		resp, err := handler(ctx, req)
 
 		logCtx = buildResponseLoggerCtx(logCtx, startTime, err)
-		log("gRPC unary server call finished", pb.GetLogFields(logCtx))
+		log(GetLogFields(logCtx), "gRPC unary server call finished")
 
 		return resp, err
 	}
@@ -37,12 +36,12 @@ func LogStreamServerInterceptor(log LogFn) grpc.StreamServerInterceptor {
 		startTime := time.Now()
 
 		logCtx := buildServerRequestCtx(stream.Context(), info.FullMethod)
-		log("gRPC streaming server call started", pb.GetLogFields(logCtx))
+		log(GetLogFields(logCtx), "gRPC streaming server call started")
 
 		err := handler(srv, stream)
 
 		logCtx = buildResponseLoggerCtx(logCtx, startTime, err)
-		log("gRPC streaming server call finished", pb.GetLogFields(logCtx))
+		log(GetLogFields(logCtx), "gRPC streaming server call finished")
 
 		return err
 	}
@@ -55,12 +54,12 @@ func LogUnaryClientInterceptor(log LogFn) grpc.UnaryClientInterceptor {
 		startTime := time.Now()
 
 		logCtx := buildClientRequestCtx(ctx, method)
-		log("gRPC unary client call started", pb.GetLogFields(logCtx))
+		log(GetLogFields(logCtx), "gRPC unary client call started")
 
 		err := invoker(ctx, method, req, reply, cc, opts...)
 
 		logCtx = buildResponseLoggerCtx(logCtx, startTime, err)
-		log("gRPC unary client call finished", pb.GetLogFields(logCtx))
+		log(GetLogFields(logCtx), "gRPC unary client call finished")
 
 		return err
 	}
@@ -73,12 +72,12 @@ func LogStreamClientInterceptor(log LogFn) grpc.StreamClientInterceptor {
 		startTime := time.Now()
 
 		logCtx := buildClientRequestCtx(ctx, method)
-		log("gRPC streaming client call started", pb.GetLogFields(logCtx))
+		log(GetLogFields(logCtx), "gRPC streaming client call started")
 
 		clientStream, err := streamer(ctx, desc, cc, method, opts...)
 
 		logCtx = buildResponseLoggerCtx(ctx, startTime, err)
-		log("gRPC streaming client call finished", pb.GetLogFields(logCtx))
+		log(GetLogFields(logCtx), "gRPC streaming client call finished")
 
 		return clientStream, err
 	}
@@ -96,7 +95,7 @@ func buildRequestCtx(ctx context.Context, kind, fullMethod string) context.Conte
 	service := path.Dir(fullMethod)[1:]
 	method := path.Base(fullMethod)
 
-	return pb.UpdateLogFields(ctx, pb.Fields{
+	return AddLogFields(ctx, Fields{
 		"system":       "grpc",
 		"span.kind":    kind,
 		"grpc.service": service,
@@ -105,7 +104,7 @@ func buildRequestCtx(ctx context.Context, kind, fullMethod string) context.Conte
 }
 
 func buildResponseLoggerCtx(ctx context.Context, startTime time.Time, err error) context.Context {
-	fields := pb.Fields{
+	fields := Fields{
 		"grpc.start_time": startTime.Format(time.RFC3339),
 		"grpc.code":       grpc.Code(err),
 		"duration":        time.Now().Sub(startTime),
@@ -115,5 +114,5 @@ func buildResponseLoggerCtx(ctx context.Context, startTime time.Time, err error)
 		fields["error"] = err
 	}
 
-	return pb.UpdateLogFields(ctx, fields)
+	return AddLogFields(ctx, fields)
 }

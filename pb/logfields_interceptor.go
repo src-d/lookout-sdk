@@ -1,4 +1,4 @@
-package grpchelper
+package pb
 
 import (
 	"context"
@@ -7,7 +7,6 @@ import (
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
-	"gopkg.in/src-d/lookout-sdk.v0/pb"
 )
 
 const logFieldsKeyMeta = "log-fields"
@@ -27,7 +26,7 @@ func CtxlogStreamClientInterceptor(ctx context.Context, desc *grpc.StreamDesc, c
 // setLogFieldsMetadata returns a new context with the log fields stored
 // into the grpc metadata, with the key 'logFieldsKeyMeta'.
 func setLogFieldsMetadata(ctx context.Context) context.Context {
-	bytes, _ := json.Marshal(pb.GetLogFields(ctx))
+	bytes, _ := json.Marshal(GetLogFields(ctx))
 	return metadata.AppendToOutgoingContext(ctx, logFieldsKeyMeta, string(bytes))
 }
 
@@ -55,10 +54,10 @@ func setContextLogger(ctx context.Context) context.Context {
 		return ctx
 	}
 
-	var fields pb.Fields
+	var fields Fields
 	if err := json.Unmarshal([]byte(md[logFieldsKeyMeta][0]), &fields); err != nil {
 		return ctx
 	}
 
-	return pb.UpdateLogFields(ctx, fields)
+	return AddLogFields(ctx, fields)
 }
