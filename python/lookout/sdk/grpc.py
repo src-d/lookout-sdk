@@ -1,4 +1,5 @@
 from urllib.parse import urlparse
+from concurrent.futures import ThreadPoolExecutor
 
 import grpc
 
@@ -15,6 +16,18 @@ def create_channel(target, options=None, interceptors=None):
     interceptors = interceptors or []
     channel = grpc.insecure_channel(target, options)
     return grpc.intercept_channel(channel, *interceptors)
+
+
+def create_server(max_workers, options=None, interceptors=None):
+    # The list of possible options is available here:
+    # https://grpc.io/grpc/core/group__grpc__arg__keys.html
+    options = (options or []) + [
+        ("grpc.max_send_message_length", grpc_max_msg_size),
+        ("grpc.max_receive_message_length", grpc_max_msg_size),
+    ]
+    interceptors = interceptors or []
+    return grpc.server(ThreadPoolExecutor(max_workers=max_workers),
+                       options=options, interceptors=interceptors)
 
 
 def to_grpc_address(target):
