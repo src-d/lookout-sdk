@@ -11,6 +11,7 @@ from lookout.sdk.service_data_pb2_grpc import DataStub, DataServicer, \
     add_DataServicer_to_server as add_dataservices_to_server
 from lookout.sdk.service_data_pb2 import Change, ChangesRequest, File, \
     FilesRequest
+from lookout.sdk.grpc_helpers import wrap_context
 
 __all__ = [
     'CommitRevision',
@@ -29,4 +30,5 @@ __all__ = [
     'FilesRequest',
     'add_analyzer_to_server',
     'add_dataservices_to_server',
+    'wrap_context'
 ]
