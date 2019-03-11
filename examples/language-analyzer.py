@@ -19,8 +19,7 @@ version = "alpha"
 
 class Analyzer(pb.AnalyzerServicer):
 
-    @pb.wrap_context
-    def NotifyReviewEvent(self, request, context):
+    def notify_review_event(self, request, context):
         print("got review request {}".format(request))
 
         comments = []
@@ -59,8 +58,7 @@ class Analyzer(pb.AnalyzerServicer):
 
         return pb.EventResponse(analyzer_version=version, comments=comments)
 
-    @pb.wrap_context
-    def NotifyPushEvent(self, request, context):
+    def notify_push_event(self, request, context):
         pass
 
 
