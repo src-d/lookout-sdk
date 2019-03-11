@@ -23,7 +23,7 @@ _For detailed information about the different parts of Lookout, and how they int
 For the gRPC client and server please follow these requirements:
 - set a common maximum gRPC message size in gRPC servers and clients. This is required to avoid hitting different gRPC limits when handling UASTs, that can be huge &mdash;see [grpc/grpc#7927](https://github.com/grpc/grpc/issues/7927)&mdash;. To do so use the included helpers in lookout-sdk:
   - go: using `pb.NewServer` and `pb.DialContext`.
-  - python: using `lookout.sdk.grpc.create_channel`.
+  - python: using `lookout.sdk.grpc.create_server` and `lookout.sdk.grpc.create_channel`.
 - support [RFC 3986 URI scheme](https://github.com/grpc/grpc-go/issues/1911); lookout-sdk includes helpers for this:
   - go: using `pb.ToGoGrpcAddress` and `pb.Listen`.
   - python: using `lookout.sdk.grpc.to_grpc_address`.
