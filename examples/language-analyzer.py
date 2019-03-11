@@ -7,7 +7,9 @@
 
 import time
 from lookout.sdk import pb
-from lookout.sdk.grpc import to_grpc_address, create_channel, create_server
+from lookout.sdk.grpc import to_grpc_address, create_channel, create_server, \
+    LogUnaryServerInterceptor, LogStreamServerInterceptor, \
+    LogUnaryClientInterceptor, LogStreamClientInterceptor
 
 from bblfsh import filter as filter_uast
 
@@ -15,6 +17,10 @@ from bblfsh import filter as filter_uast
 port_to_listen = 9930
 data_srv_addr = to_grpc_address("ipv4://localhost:10301")
 version = "alpha"
+
+
+def log_fn(log_fields, msg):
+    print("{msg} [{log_fields}]".format(msg=msg, log_fields=log_fields.fields))
 
 
 class Analyzer(pb.AnalyzerServicer):
@@ -25,7 +31,10 @@ class Analyzer(pb.AnalyzerServicer):
         comments = []
 
         # client connection to DataServe
-        with create_channel(data_srv_addr) as channel:
+        with create_channel(data_srv_addr, interceptors=[
+                LogUnaryClientInterceptor(log_fn),
+                LogStreamClientInterceptor(log_fn),
+        ]) as channel:
             stub = pb.DataStub(channel)
 
             # Add some log fields that will be available to the data server
@@ -63,7 +72,10 @@ class Analyzer(pb.AnalyzerServicer):
 
 
 def serve():
-    server = create_server(10)
+    server = create_server(10, interceptors=[
+        LogUnaryServerInterceptor(log_fn),
+        LogStreamServerInterceptor(log_fn),
+    ])
     pb.add_analyzer_to_server(Analyzer(), server)
     server.add_insecure_port("0.0.0.0:{}".format(port_to_listen))
     server.start()
