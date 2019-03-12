@@ -24,8 +24,8 @@ class ServerInterceptorWrapper(grpc.ServerInterceptor):
     This class is a sort of hack that permits the user to have a clean api to
     create server interceptors for each gRPC method type. Currently the
     following classes are provided (similarly to the Go SDK):
-        - `lookout.sdk.grpc.interceptors.utils.UnaryServerInterceptor`,
-        - `lookout.sdk.grpc.interceptors.utils.ServerServerInterceptor`.
+        - `lookout.sdk.grpc.interceptors.base.UnaryServerInterceptor`,
+        - `lookout.sdk.grpc.interceptors.base.ServerServerInterceptor`.
 
     The first one intercepts both unary-unary and stream-unary invocations (so
     the invocations where the server response is unary).

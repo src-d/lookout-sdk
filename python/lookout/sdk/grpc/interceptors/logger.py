@@ -5,7 +5,7 @@ from typing import Callable, Union
 import grpc
 
 from lookout.sdk.grpc.utils import LogFields
-from lookout.sdk.grpc.interceptors import utils
+from lookout.sdk.grpc.interceptors import base
 
 
 class LogInterceptorMixin:
@@ -81,7 +81,7 @@ class LogClientInterceptorMixin(LogInterceptorMixin):
 
 
 class LogUnaryClientInterceptor(LogClientInterceptorMixin,
-                                utils.UnaryClientInterceptor):
+                                base.UnaryClientInterceptor):
     """Logger interceptor for unary client"""
 
     PRE_REQUEST_MESSAGE = "gRPC unary client call started"
@@ -92,7 +92,7 @@ class LogUnaryClientInterceptor(LogClientInterceptorMixin,
 
 
 class LogStreamClientInterceptor(LogClientInterceptorMixin,
-                                 utils.StreamClientInterceptor):
+                                 base.StreamClientInterceptor):
     """Logger interceptor for streaming client"""
 
     PRE_REQUEST_MESSAGE = "gRPC streaming client call started"
@@ -106,7 +106,7 @@ class LogServerInterceptorMixin(LogInterceptorMixin):
     """Logger interceptor for server
 
     This server interceptor is actually never called directly by gRPC, but
-    it is always wrapped by `lookout.sdk.interceptors.utils.ServerInterceptorWrapper`.
+    it is always wrapped by `lookout.sdk.interceptors.base.ServerInterceptorWrapper`.
     See its documentation to understand how the reason why.
 
     """
@@ -157,7 +157,7 @@ class LogServerInterceptorMixin(LogInterceptorMixin):
 
 
 class LogUnaryServerInterceptor(LogServerInterceptorMixin,
-                                utils.UnaryServerInterceptor):
+                                base.UnaryServerInterceptor):
     """Logger interceptor for unary server"""
 
     PRE_REQUEST_MESSAGE = "gRPC unary server call started"
@@ -165,7 +165,7 @@ class LogUnaryServerInterceptor(LogServerInterceptorMixin,
 
 
 class LogStreamServerInterceptor(LogServerInterceptorMixin,
-                                 utils.StreamServerInterceptor):
+                                 base.StreamServerInterceptor):
     """Logger interceptor for streaming server"""
 
     PRE_REQUEST_MESSAGE = "gRPC streaming server call started"
