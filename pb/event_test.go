@@ -92,10 +92,6 @@ func TestParseRepositoryInfo(t *testing.T) {
 			Expected: "host can't be empty",
 		},
 		{
-			Input:    "\n",
-			Expected: "parse https://\n: invalid character \"\\n\" in host name",
-		},
-		{
 			Input:    "http://github.com/foo/bar",
 			Expected: "only https urls are supported",
 		},
@@ -128,4 +124,9 @@ func TestParseRepositoryInfo(t *testing.T) {
 		require.EqualError(err, c.Expected)
 		require.Nil(actual)
 	}
+
+	// this test case returns different errors on go1.11 and go1.12
+	actual, err := ParseRepositoryInfo("\n")
+	require.Error(err)
+	require.Nil(actual)
 }
