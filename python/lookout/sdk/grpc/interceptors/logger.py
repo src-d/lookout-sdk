@@ -4,7 +4,7 @@ from typing import Callable, Union
 
 import grpc
 
-from lookout.sdk.grpc.utils import LogFields
+from lookout.sdk.grpc.log_fields import LogFields
 from lookout.sdk.grpc.interceptors import base
 
 
