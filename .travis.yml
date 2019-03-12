@@ -40,10 +40,10 @@ jobs:
         - grep -v -i "error" ./sdk.log > /dev/null
 
     - &golangIntegrationTest
-      name: 'Golang 1.10: example integration tests'
+      name: 'Golang 1.12: example integration tests'
       stage: test
       language: go
-      go: '1.10'
+      go: '1.12'
       install:
         - go version
         - go get ./examples
@@ -61,10 +61,10 @@ jobs:
       go: '1.11'
 
     - &golangTest
-      name: 'Golang 1.10: test'
+      name: 'Golang 1.12: test'
       stage: test
       language: go
-      go: '1.10'
+      go: '1.12'
       script:
         - make dependencies
         - make test
@@ -74,10 +74,10 @@ jobs:
       go: '1.11'
 
     - &generatedCode
-      name: 'Golang 1.10: generated code'
+      name: 'Golang 1.12: generated code'
       stage: test
       language: go
-      go: '1.10'
+      go: '1.12'
       env:
         - PYENV_VERSION="3.6.7"
       script:
