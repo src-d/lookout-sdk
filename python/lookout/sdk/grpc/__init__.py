@@ -1,4 +1,4 @@
-from lookout.sdk.grpc.utils import to_grpc_address, create_channel, \
+from lookout.sdk.grpc.connection import to_grpc_address, create_channel, \
     create_server
 from lookout.sdk.grpc.interceptors.logger import \
     LogUnaryServerInterceptor, LogStreamServerInterceptor, \
