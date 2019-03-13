@@ -64,7 +64,7 @@ class LogClientInterceptorMixin(LogInterceptorMixin):
 
     def intercept(self, continuation, client_call_details, request):
         log_fields = LogFields.from_metadata(
-            dict(client_call_details.metadata))
+            dict(client_call_details.metadata or {}))
 
         self.add_request_log_fields(
             log_fields, client_call_details)
@@ -116,7 +116,7 @@ class LogServerInterceptorMixin(LogInterceptorMixin):
 
     def intercept_service(self, continuation, handler_call_details):
         log_fields = LogFields.from_metadata(
-            dict(handler_call_details.invocation_metadata))
+            dict(handler_call_details.invocation_metadata or {}))
 
         self.add_request_log_fields(
             log_fields, handler_call_details)
