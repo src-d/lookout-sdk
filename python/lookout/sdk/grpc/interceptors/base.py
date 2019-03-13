@@ -56,9 +56,7 @@ class ServerInterceptorWrapper(grpc.ServerInterceptor):
         See `grpc.ServerInterceptor.intercept_service`.
 
         """
-        method = handler_call_details.method
-        rpc_method_handler = self._server._state.generic_handlers[0]\
-                                                ._method_handlers[method]
+        rpc_method_handler = self._get_rpc_handler(handler_call_details)
         if rpc_method_handler.response_streaming:
             if self._wrapped.is_streaming:
                 # `self._wrapped` is a `StreamServerInterceptor`
@@ -72,6 +70,18 @@ class ServerInterceptorWrapper(grpc.ServerInterceptor):
 
         # skip the interceptor due to type mismatch
         return continuation(handler_call_details)
+
+    def _get_rpc_handler(self, handler_call_details):
+        method = handler_call_details.method
+
+        if not self._server:
+            raise RuntimeError("%s is not bind to a server" %
+                               self._wrapped.__class__.__name__)
+
+        # get the first dictionary generic handler by assuming that a single
+        # analyzer is attached to the server
+        analyzer_generic_handler = self._server._state.generic_handlers[0]
+        return analyzer_generic_handler._method_handlers[method]
 
 
 class UnaryClientInterceptor(grpc.UnaryUnaryClientInterceptor,
