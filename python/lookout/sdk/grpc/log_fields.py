@@ -1,19 +1,9 @@
 import json
 import functools
 
-from typing import Optional, Tuple, List, Any, Union, Dict
-
-import grpc
+from typing import Optional, Tuple, List, Any, Dict
 
 LOG_FIELDS_KEY_META = "log-fields"
-grpc_max_msg_size = 100 * 1024 * 1024  # 100MB
-
-ClientInterceptor = Union[
-    grpc.UnaryUnaryClientInterceptor,
-    grpc.UnaryStreamClientInterceptor,
-    grpc.StreamUnaryClientInterceptor,
-    grpc.StreamStreamClientInterceptor,
-]
 
 
 def wrap_context(func):

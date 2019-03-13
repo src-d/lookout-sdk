@@ -7,7 +7,6 @@ import grpc
 
 from lookout.sdk.grpc.interceptors import base
 
-LOG_FIELDS_KEY_META = "log-fields"
 grpc_max_msg_size = 100 * 1024 * 1024  # 100MB
 
 ClientInterceptor = Union[
