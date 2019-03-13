@@ -8,7 +8,7 @@ from lookout.sdk.service_analyzer_pb2_grpc import AnalyzerStub, \
     add_AnalyzerServicer_to_server as add_analyzer_to_server
 from lookout.sdk.service_analyzer_pb2 import Comment, EventResponse
 from lookout.sdk.service_data_pb2_grpc import DataServicer, \
-    add_DataServicer_to_server as add_dataservices_to_server
+    add_DataServicer_to_server as add_dataservicer_to_server
 from lookout.sdk.service_data_pb2 import Change, ChangesRequest, File, \
     FilesRequest
 from lookout.sdk.service_data import DataStub
@@ -30,5 +30,5 @@ __all__ = [
     'File',
     'FilesRequest',
     'add_analyzer_to_server',
-    'add_dataservices_to_server',
+    'add_dataservicer_to_server',
 ]
