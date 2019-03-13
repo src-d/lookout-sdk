@@ -25,3 +25,10 @@ protogen: check-protoc check-gogofaster
 		./_tools/protogen_golang.sh
 		pip3 install $(PIP_ARGS) grpcio_tools==1.13.0
 		./_tools/protogen_python.sh
+
+test-python-sdk:
+	pip3 install $(PIP_ARGS) coverage==4.5.3
+	cd python && python3 setup.py install
+	coverage run --omit "python/tests/*" --branch -m unittest discover python
+	coverage report -m
+test: test-python-sdk
