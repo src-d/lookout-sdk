@@ -5,6 +5,8 @@ from typing import Optional, Tuple, List, Any, Union
 
 import grpc
 
+from lookout.sdk.grpc.interceptors import base
+
 LOG_FIELDS_KEY_META = "log-fields"
 grpc_max_msg_size = 100 * 1024 * 1024  # 100MB
 
@@ -75,9 +77,15 @@ def create_server(
         ("grpc.max_send_message_length", grpc_max_msg_size),
         ("grpc.max_receive_message_length", grpc_max_msg_size),
     ]
-    interceptors = interceptors or []
-    return grpc.server(ThreadPoolExecutor(max_workers=max_workers),
-                       options=options, interceptors=interceptors)
+    interceptors = [base.ServerInterceptorWrapper(i)
+                    for i in (interceptors or [])]
+    server = grpc.server(ThreadPoolExecutor(max_workers=max_workers),
+                         options=options, interceptors=interceptors)
+
+    for i in interceptors:
+        i.bind(server)
+
+    return server
 
 
 def to_grpc_address(target: str) -> str:
