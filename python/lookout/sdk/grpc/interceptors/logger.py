@@ -25,7 +25,7 @@ class LogInterceptorMixin:
     ):
         """Add log fields related to a request to the provided log fields
 
-        :param log_fields: log fields instnace to which to add the fields
+        :param log_fields: log fields instance to which to add the fields
         :param call_details: some information regarding the call
 
         """
@@ -107,7 +107,7 @@ class LogServerInterceptorMixin(LogInterceptorMixin):
 
     This server interceptor is actually never called directly by gRPC, but
     it is always wrapped by `lookout.sdk.interceptors.base.ServerInterceptorWrapper`.
-    See its documentation to understand how the reason why.
+    See its documentation to understand the reason why.
 
     """
     KIND = "server"
