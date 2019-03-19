@@ -61,16 +61,18 @@ jobs:
       go: '1.11'
 
     - &golangTest
-      name: 'Golang 1.12: test'
+      name: 'Golang 1.12 and Python 3.6: test'
       stage: test
       language: go
       go: '1.12'
+      env:
+        - PYENV_VERSION="3.6.7"
       script:
         - make dependencies
         - make test
 
     - <<: *golangTest
-      name: 'Golang 1.11: test'
+      name: 'Golang 1.11 and Python 3.6: test'
       go: '1.11'
 
     - &generatedCode

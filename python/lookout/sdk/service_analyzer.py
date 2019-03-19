@@ -1,7 +1,7 @@
 import re
 import inspect
 from lookout.sdk import service_analyzer_pb2_grpc
-from lookout.sdk.grpc_helpers import wrap_context
+from lookout.sdk.grpc.log_fields import wrap_context
 
 
 class AnalyzerServicerMetaclass(type):
@@ -57,7 +57,7 @@ class AnalyzerServicer(object, metaclass=AnalyzerServicerMetaclass):
         metaclass makes each gRPC method call the corresponding method with the
         same name, but written in snake case. Each gRPC method instead of
         passing the gRPC original context, they pass a wrapped one using
-        `lookout.sdk.grpc_helpers.WrappedContext`.
+        `lookout.sdk.grpc.log_fields.WrappedContext`.
 
     """
     pass

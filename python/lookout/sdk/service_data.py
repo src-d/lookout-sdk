@@ -37,6 +37,9 @@ class DataStub:
         )
 
     def _build_metadata(self, context, metadata):
+        if context is None:
+            return metadata
+
         new_metadata = context.pack_metadata()
         if metadata:
             new_metadata.extend(metadata)
