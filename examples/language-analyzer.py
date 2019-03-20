@@ -7,6 +7,7 @@
 
 import time
 from lookout.sdk import pb
+from lookout.sdk.service_data import DataStub
 from lookout.sdk.grpc import to_grpc_address, create_channel, create_server, \
     LogUnaryServerInterceptor, LogStreamServerInterceptor, \
     LogUnaryClientInterceptor, LogStreamClientInterceptor
@@ -35,7 +36,7 @@ class Analyzer(pb.AnalyzerServicer):
                 LogUnaryClientInterceptor(log_fn),
                 LogStreamClientInterceptor(log_fn),
         ]) as channel:
-            stub = pb.DataStub(channel)
+            stub = DataStub(channel)
 
             # Add some log fields that will be available to the data server
             # using `context.add_log_fields`.
