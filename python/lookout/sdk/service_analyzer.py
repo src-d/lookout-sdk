@@ -23,8 +23,9 @@ class AnalyzerServicerMetaclass(type):
             if name.startswith("__"):
                 continue
 
+            default_func = dct.get(name, func)
             snake_case_name = cls._to_snake_case(name)
-            new_attrs[snake_case_name] = dct.get(snake_case_name, func)
+            new_attrs[snake_case_name] = dct.get(snake_case_name, default_func)
             new_attrs[name] = wrap_context(new_attrs[snake_case_name])
 
         return super(AnalyzerServicerMetaclass, cls).__new__(
