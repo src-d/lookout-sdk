@@ -7,6 +7,7 @@ import unittest
 import grpc
 
 from lookout.sdk import pb
+from lookout.sdk.service_data import DataStub
 from lookout.sdk.grpc import create_channel, create_server, \
     LogUnaryServerInterceptor, \
     LogStreamServerInterceptor, \
@@ -131,7 +132,7 @@ class TestClientLoggerInterceptors(TestWithRunningServicerMixin,
                 LogUnaryClientInterceptor(self._tracker.unary),
                 LogStreamClientInterceptor(self._tracker.stream),
         ]) as channel:
-            stub = pb.DataStub(channel)
+            stub = DataStub(channel)
             stub.get_changes(None, pb.ChangesRequest())
 
         self.assertEqual(self._tracker.counter, {"unary": 0, "stream": 2})
