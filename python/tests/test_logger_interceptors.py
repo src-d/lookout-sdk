@@ -1,6 +1,4 @@
-import socket
 from concurrent.futures import ThreadPoolExecutor
-from contextlib import closing
 
 import unittest
 
@@ -14,13 +12,7 @@ from lookout.sdk.grpc import create_channel, create_server, \
     LogUnaryClientInterceptor, \
     LogStreamClientInterceptor
 from lookout.sdk import event_pb2
-
-
-def find_free_port():
-    with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
-        s.bind(('', 0))
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        return s.getsockname()[1]
+from lookout.sdk.test import mixins
 
 
 class DummyAnalyzer(pb.AnalyzerServicer):
@@ -41,37 +33,7 @@ class DummyDataServicer(pb.DataServicer):
         return pb.File()
 
 
-class LogFnTracker:
-
-    def __init__(self):
-        self.counter = {"unary": 0, "stream": 0}
-        self.logs = []
-
-    def unary(self, log_fields, msg):
-        self._record(log_fields, msg, "unary")
-
-    def stream(self, log_fields, msg):
-        self._record(log_fields, msg, "stream")
-
-    def _record(self, log_fields, msg, key):
-        self.counter[key] += 1
-        self.logs.append((log_fields.fields.copy(), msg))
-
-
-class TestWithRunningServicerMixin:
-
-    def setUp(self):
-        self._tracker = LogFnTracker()
-        self._target = "0.0.0.0:{}".format(find_free_port())
-        self._server = self.build_server()
-        self._server.add_insecure_port(self._target)
-        self._server.start()
-
-    def tearDown(self):
-        self._server.stop(0)
-
-
-class TestServerLoggerInterceptors(TestWithRunningServicerMixin,
+class TestServerLoggerInterceptors(mixins.TestWithRunningServicerMixin,
                                    unittest.TestCase):
 
     def build_server(self):
@@ -118,7 +80,7 @@ class TestServerLoggerInterceptors(TestWithRunningServicerMixin,
         self.assertEqual(second_unary[1], "gRPC unary server call finished")
 
 
-class TestClientLoggerInterceptors(TestWithRunningServicerMixin,
+class TestClientLoggerInterceptors(mixins.TestWithRunningServicerMixin,
                                    unittest.TestCase):
 
     def build_server(self):
