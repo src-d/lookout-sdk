@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"testing"
+	time "time"
 
 	"gopkg.in/src-d/lookout-sdk.v0/pb"
 
@@ -75,6 +76,8 @@ func (s *GrpcSuite) TestAnalyzerService() {
 	pb.RegisterAnalyzerServer(s.grpcServer, &mockAnalyzer{})
 
 	go s.startServer()
+	// Wait for the server to start listening
+	time.Sleep(time.Second)
 
 	conn, err := pb.DialContext(context.TODO(), s.grpcAddr)
 	require.NoError(err)
@@ -106,6 +109,8 @@ func (s *GrpcSuite) TestAnalyzerCtxlogInterceptor() {
 	})
 
 	go s.startServer()
+	// Wait for the server to start listening
+	time.Sleep(time.Second)
 
 	conn, err := pb.DialContext(context.TODO(), s.grpcAddr)
 	require.NoError(err)
@@ -160,6 +165,8 @@ func (s *GrpcSuite) TestAnalyzerAddLogFieldsInterceptor() {
 	pb.RegisterAnalyzerServer(s.grpcServer, &mockAnalyzer{})
 
 	go s.startServer()
+	// Wait for the server to start listening
+	time.Sleep(time.Second)
 
 	var clientFields pb.Fields
 
