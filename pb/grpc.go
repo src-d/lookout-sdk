@@ -79,7 +79,7 @@ func NewServer(opts ...grpc.ServerOption) *grpc.Server {
 }
 
 // NewServerWithInterceptors creates new grpc.Server with custom message size and default interceptors.
-// The provided interceptros will be appended to the predefined ones.
+// The provided interceptors be executed after the default ones.
 func NewServerWithInterceptors(
 	streamInterceptors []grpc.StreamServerInterceptor,
 	unaryInterceptors []grpc.UnaryServerInterceptor,
@@ -112,7 +112,7 @@ func DialContext(ctx context.Context, target string, opts ...grpc.DialOption) (*
 }
 
 // DialContextWithInterceptors creates a client connection to the given target with custom message size and default interceptors.
-// The provided interceptros will be appended to the predefined ones.
+// The provided interceptors will be executed before the default ones.
 func DialContextWithInterceptors(
 	ctx context.Context,
 	target string,
@@ -121,11 +121,13 @@ func DialContextWithInterceptors(
 	opts ...grpc.DialOption,
 ) (*grpc.ClientConn, error) {
 	streamInterceptors = append(
-		[]grpc.StreamClientInterceptor{CtxlogStreamClientInterceptor},
-		streamInterceptors...)
+		streamInterceptors,
+		CtxlogStreamClientInterceptor,
+	)
 	unaryInterceptors = append(
-		[]grpc.UnaryClientInterceptor{CtxlogUnaryClientInterceptor},
-		unaryInterceptors...)
+		unaryInterceptors,
+		CtxlogUnaryClientInterceptor,
+	)
 
 	opts = append(opts,
 		grpc.WithStreamInterceptor(grpc_middleware.ChainStreamClient(
