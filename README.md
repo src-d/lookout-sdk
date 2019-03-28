@@ -1,4 +1,4 @@
-# lookout-sdk [![GitHub version](https://badge.fury.io/gh/src-d%2Flookout-sdk.svg)](https://github.com/src-d/lookout-sdk/releases) [![PyPI version](https://badge.fury.io/py/lookout-sdk.svg)](https://pypi.org/project/lookout-sdk/) [![Build Status](https://travis-ci.org/src-d/lookout-sdk.svg?branch=master)](https://travis-ci.org/src-d/lookout-sdk) [![GoDoc](https://godoc.org/gopkg.in/src-d/lookout-sdk.v0?status.svg)](https://godoc.org/gopkg.in/src-d/lookout-sdk.v0/pb)
+# lookout-sdk [![GitHub version](https://badge.fury.io/gh/src-d%2Flookout-sdk.svg)](https://github.com/src-d/lookout-sdk/releases) [![PyPI version](https://badge.fury.io/py/lookout-sdk.svg)](https://pypi.org/project/lookout-sdk/) [![Build Status](https://travis-ci.com/src-d/lookout-sdk.svg?branch=master)](https://travis-ci.com/src-d/lookout-sdk) [![GoDoc](https://godoc.org/gopkg.in/src-d/lookout-sdk.v0?status.svg)](https://godoc.org/gopkg.in/src-d/lookout-sdk.v0/pb)
 
 Toolkit for writing new analyzers for **[source{d} Lookout](https://github.com/src-d/lookout)**.
 
