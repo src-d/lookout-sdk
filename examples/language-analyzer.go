@@ -3,12 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
-	"io"
 	"os"
 
 	"google.golang.org/grpc"
 	"gopkg.in/bblfsh/client-go.v2/tools"
 	log "gopkg.in/src-d/go-log.v1"
+	sdk "gopkg.in/src-d/lookout-sdk.v0/go"
 	"gopkg.in/src-d/lookout-sdk.v0/pb"
 )
 
@@ -44,14 +44,13 @@ func (*analyzer) NotifyReviewEvent(ctx context.Context, review *pb.ReviewEvent) 
 			pb.LogUnaryClientInterceptor(logFn),
 		},
 	)
-
 	if err != nil {
 		logger.Errorf(err, "failed to connect to DataServer at %s", dataSrvAddr)
 		return nil, err
 	}
 	defer conn.Close()
 
-	dataClient := pb.NewDataClient(conn)
+	dataClient := sdk.NewDataClient(conn)
 
 	// Add some log fields that will be available to the data server
 	// using `pb.AddLogFields`.
@@ -60,7 +59,7 @@ func (*analyzer) NotifyReviewEvent(ctx context.Context, review *pb.ReviewEvent) 
 		"some-int-key":    1,
 	})
 
-	changes, err := dataClient.GetChanges(ctx, &pb.ChangesRequest{
+	changes, err := dataClient.GetChanges(ctx, &sdk.ChangesRequest{
 		Head:            &review.Head,
 		Base:            &review.Base,
 		WantContents:    false,
@@ -73,16 +72,8 @@ func (*analyzer) NotifyReviewEvent(ctx context.Context, review *pb.ReviewEvent) 
 	}
 
 	var comments []*pb.Comment
-	for {
-		change, err := changes.Recv()
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			logger.Errorf(err, "GetChanges from DataServer %s failed", dataSrvAddr)
-			return nil, err
-		}
-
+	for changes.Next() {
+		change := changes.Change()
 		if change.Head == nil {
 			continue
 		}
@@ -103,6 +94,10 @@ func (*analyzer) NotifyReviewEvent(ctx context.Context, review *pb.ReviewEvent) 
 			Line: 0,
 			Text: fmt.Sprintf("language: %s, functions: %d", change.Head.Language, len(fns)),
 		})
+	}
+	if err := changes.Err(); err != nil {
+		logger.Errorf(err, "GetChanges from DataServer %s failed", dataSrvAddr)
+		return nil, err
 	}
 
 	return &pb.EventResponse{AnalyzerVersion: version, Comments: comments}, nil
