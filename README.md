@@ -1,6 +1,6 @@
-# lookout-sdk [![GitHub version](https://badge.fury.io/gh/src-d%2Flookout-sdk.svg)](https://github.com/src-d/lookout-sdk/releases) [![PyPI version](https://badge.fury.io/py/lookout-sdk.svg)](https://pypi.org/project/lookout-sdk/) [![Build Status](https://travis-ci.com/src-d/lookout-sdk.svg?branch=master)](https://travis-ci.com/src-d/lookout-sdk) [![GoDoc](https://godoc.org/gopkg.in/src-d/lookout-sdk.v0?status.svg)](https://godoc.org/gopkg.in/src-d/lookout-sdk.v0/pb)
+# lookout-sdk [![GitHub version](https://badge.fury.io/gh/src-d%2Flookout-sdk.svg)](https://github.com/meyskens/lookout-sdk/releases) [![PyPI version](https://badge.fury.io/py/lookout-sdk.svg)](https://pypi.org/project/lookout-sdk/) [![Build Status](https://travis-ci.com/meyskens/lookout-sdk.svg?branch=master)](https://travis-ci.com/meyskens/lookout-sdk) [![GoDoc](https://godoc.org/gopkg.in/meyskens/lookout-sdk.v0?status.svg)](https://godoc.org/gopkg.in/meyskens/lookout-sdk.v0/pb)
 
-Toolkit for writing new analyzers for **[source{d} Lookout](https://github.com/src-d/lookout)**.
+Toolkit for writing new analyzers for **[source{d} Lookout](https://github.com/meyskens/lookout)**.
 
 
 # What Does the SDK Provide?
@@ -29,7 +29,7 @@ For the gRPC client and server please follow these requirements:
   - python: using `lookout.sdk.grpc.to_grpc_address`.
 - use insecure connection:
   - currently lookout expects to use insecure gRPC connections, as provided by `pb.DialContext`
-  - python: run server using `server.add_insecure_port(address)` ([example](https://github.com/src-d/lookout-sdk/blob/master/examples/language-analyzer.py#L63)).
+  - python: run server using `server.add_insecure_port(address)` ([example](https://github.com/meyskens/lookout-sdk/blob/master/examples/language-analyzer.py#L63)).
 
 ## DataService
 

@@ -3,7 +3,7 @@ sudo: required
 
 language: generic
 
-go_import_path: gopkg.in/src-d/lookout-sdk.v0
+go_import_path: gopkg.in/meyskens/lookout-sdk.v0
 
 git:
   depth: false

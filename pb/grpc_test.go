@@ -7,7 +7,7 @@ import (
 	"testing"
 	time "time"
 
-	"gopkg.in/src-d/lookout-sdk.v0/pb"
+	"gopkg.in/meyskens/lookout-sdk.v0/pb"
 
 	"github.com/stretchr/testify/suite"
 	grpc "google.golang.org/grpc"

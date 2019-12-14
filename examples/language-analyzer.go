@@ -8,8 +8,8 @@ import (
 	"google.golang.org/grpc"
 	"gopkg.in/bblfsh/client-go.v2/tools"
 	log "gopkg.in/src-d/go-log.v1"
-	"gopkg.in/src-d/lookout-sdk.v0/go/sdk"
-	"gopkg.in/src-d/lookout-sdk.v0/pb"
+	"gopkg.in/meyskens/lookout-sdk.v0/go/sdk"
+	"gopkg.in/meyskens/lookout-sdk.v0/pb"
 )
 
 // Example Analyser gRPC service implementation.

@@ -3,7 +3,7 @@
 # Installs latest lookout SDK binary
 
 OS="$(uname | tr '[:upper:]' '[:lower:]')"
-LATEST_TAG="$(git ls-remote -t --refs https://github.com/src-d/lookout \
+LATEST_TAG="$(git ls-remote -t --refs https://github.com/meyskens/lookout \
   | sed -E 's/^.+refs\/tags\/(.+)/\1/g' \
   | grep -e '^v[0-9]\+\.[0-9]\+\.[0-9]\+$' \
   | sort \
@@ -15,7 +15,7 @@ if [ -z "$LATEST_TAG" ]; then
   exit 2
 fi
 
-BINARY_URL="https://github.com/src-d/lookout/releases/download/${LATEST_TAG}/lookout-sdk_${LATEST_TAG}_${OS}_amd64.tar.gz"
+BINARY_URL="https://github.com/meyskens/lookout/releases/download/${LATEST_TAG}/lookout-sdk_${LATEST_TAG}_${OS}_amd64.tar.gz"
 
 if ! wget $BINARY_URL ; then
   echo "Unable to download lookout release archive" >&2

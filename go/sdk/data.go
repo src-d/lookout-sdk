@@ -5,7 +5,7 @@ import (
 	"io"
 
 	"google.golang.org/grpc"
-	"gopkg.in/src-d/lookout-sdk.v0/pb"
+	"gopkg.in/meyskens/lookout-sdk.v0/pb"
 )
 
 // ChangesRequest defines a request of Changes to the Data service.
